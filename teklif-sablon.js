@@ -31,13 +31,13 @@
         incl:"Dahil",sub:"Ara Toplam",disc:"İndirim",total:"Genel Toplam",noprice:"Fiyat bilgisi ayrıca iletilecektir.",
         terms:"Ticari Koşullar",delivery:"Teslim Süresi",incoterm:"Teslim Şekli",payment:"Ödeme",warranty:"Garanti",
         general:"Genel Şartlar",note:"Not",regards:"Saygılarımızla,",sign:"Kaşe / İmza",tel:"Tel",mail:"E-posta",
-        msg:(o)=>[`Merhaba ${o.customer.name||""},`,"",`ORİMAK ${o.machine.name} teklifimizi (${o.no}) PDF olarak bu mesajın ardından gönderiyoruz.`,"","Sorularınız için bu numaradan bize her zaman ulaşabilirsiniz.","",`Saygılarımızla,`,`${o.by?o.by+" – ":""}ORİMAK Makina`]},
+        msg:(o)=>[`Merhaba ${o.customer.name||""},`,"",`ORİMAK ${o.machine.name} teklifimizi (${o.no}) bu mesajın ardından iletiyoruz.`,"","Sorularınız için bu numaradan bize her zaman ulaşabilirsiniz.","",`Saygılarımızla,`,`${o.by?o.by+" – ":""}ORİMAK Makina`]},
     en:{title:"QUOTATION",no:"Quotation No",date:"Date",valid:"Validity",days:"days",to:"Quotation For",from:"Quotation By",dear:"Dear",
         machine:"Machine",specs:"Technical Specifications",prices:"Pricing",scope:"Scope of Supply",nr:"No",desc:"Description",qty:"Qty",unit:"Unit Price",amount:"Amount",
         incl:"Included",sub:"Subtotal",disc:"Discount",total:"Grand Total",noprice:"Pricing will be sent separately.",
         terms:"Commercial Terms",delivery:"Delivery Time",incoterm:"Delivery Terms",payment:"Payment",warranty:"Warranty",
         general:"General Conditions",note:"Note",regards:"Best regards,",sign:"Stamp / Signature",tel:"Tel",mail:"E-mail",
-        msg:(o)=>[`Hello ${o.customer.name||""},`,"",`Our ORİMAK ${o.machine.name} quotation (${o.no}) follows this message as a PDF.`,"","Feel free to reach us on this number for any questions.","","Best regards,",`${o.by?o.by+" – ":""}ORİMAK Makina`]}
+        msg:(o)=>[`Hello ${o.customer.name||""},`,"",`Our ORİMAK ${o.machine.name} quotation (${o.no}) follows this message.`,"","Feel free to reach us on this number for any questions.","","Best regards,",`${o.by?o.by+" – ":""}ORİMAK Makina`]}
   };
   const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const num=v=>{const n=parseFloat(String(v??"").replace(/\s/g,"").replace(/\.(?=\d{3}(\D|$))/g,"").replace(",","."));return isFinite(n)?n:0};
@@ -184,6 +184,21 @@ ${o.closing?`<p class="close">${esc(o.closing)}</p>`:""}
       return doc.output("blob");
     }finally{host.remove()}
   }
+  // Teklifin tek parça görseli (WhatsApp'a yapıştırmak / paylaşmak için)
+  async function image(o,scale){
+    const h2p=await lib();
+    const host=document.createElement("div");
+    host.style.cssText="position:fixed;left:-10000px;top:0;width:794px;background:#fff";
+    host.innerHTML=html(o);document.body.appendChild(host);
+    try{
+      if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+      const imgs=[...host.querySelectorAll("img")];await Promise.all(imgs.map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r})));
+      const el=host.firstElementChild;el.style.paddingTop="40px";el.style.paddingBottom="44px";
+      let canvas=null;
+      await h2p().set({html2canvas:{scale:scale||1.6,backgroundColor:"#ffffff",useCORS:true}}).from(el).toCanvas().get("canvas").then(c=>{canvas=c});
+      return await new Promise((res,rej)=>canvas.toBlob(b=>b?res(b):rej(new Error("png")),"image/png"));
+    }finally{host.remove()}
+  }
   function message(o){const t=T[o.lang]||T.tr;return t.msg(o).join("\n")}
-  window.Teklif={html,pdf,message,total,money:(v,o)=>money(v,o),T,STD,LOGO,LOGO_DARK};
+  window.Teklif={html,pdf,image,message,total,money:(v,o)=>money(v,o),T,STD,LOGO,LOGO_DARK};
 })();
