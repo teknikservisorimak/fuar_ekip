@@ -1,0 +1,17 @@
+{
+  "name": "ORİMAK Fuar CRM",
+  "short_name": "Fuar CRM",
+  "description": "Fuarda ve sonrasında müşteri takibi",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#EDF1F5",
+  "theme_color": "#1450A3",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

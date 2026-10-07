@@ -1,8 +1,25 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ORİMAK Fuar CRM</title>
+<meta name="theme-color" content="#1450A3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Fuar CRM">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+img{max-width:100%}
+
 /* Layout: mobile-first app shell — sticky header, pipeline strip, lead list, bottom sheet for add/edit; desktop gets a wider centered column */
 :root{
   --bg:#EDF1F5; --surface:#FFFFFF; --surface-2:#F5F7FA; --ink:#0F1B26; --muted:#5A6A79; --line:#D3DBE3;
@@ -78,6 +95,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .flag i.cold{background:var(--s-contact)}
 @keyframes hot{50%{transform:scale(1.25)}}
 .lead-main{min-width:0}
+.lead-name,.lead-sub{display:block}
 .lead-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lead-sub{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
@@ -170,8 +188,16 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 }
 @media (max-width:420px){.form{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
-</style>
 
+.hint{position:fixed;left:16px;right:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:35;max-width:520px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:16px;padding:14px 44px 14px 14px;font-size:14px;box-shadow:var(--shadow);animation:rise .4s both}
+.hint b{display:block;margin-bottom:2px}
+.hint svg{width:16px;height:16px;vertical-align:-3px;stroke:currentColor;fill:none;stroke-width:2}
+.hint button{position:absolute;right:8px;top:8px;background:none;border:0;color:inherit;font-size:20px;line-height:1;padding:6px}
+.searchrow .iconbtn{flex:0 0 auto}
+@media (max-width:420px){.iconbtn .lbl2{display:none}}
+</style>
+</head>
+<body>
 <div class="wrap">
   <header class="top">
     <div class="brand">
@@ -185,6 +211,9 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
       </div>
       <button class="iconbtn" id="exportBtn" type="button" aria-label="CSV olarak dışa aktar">
         <svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>CSV
+      </button>
+      <button class="iconbtn" id="backupBtn" type="button" aria-label="JSON yedek indir">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16v12H4zM8 7V4h8v3M9 13h6"/></svg><span class="lbl2">Yedek</span>
       </button>
     </div>
     <div class="pipe" id="pipe"></div>
@@ -204,7 +233,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
   <div class="grab"></div>
   <div class="sheet-h"><h3 id="sheetTitle">Yeni müşteri</h3><button class="ghost" id="closeBtn" type="button">Kapat</button></div>
   <div class="sheet-body">
-    <button class="scan" id="scanBtn" type="button" hidden>
+    <button class="scan" id="scanBtn" type="button">
       <span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg></span>
       <span><b id="scanTitle">Kartvizit tara</b><small id="scanSub">Fotoğraf çekin, bilgiler otomatik dolsun</small></span>
     </button>
@@ -223,6 +252,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
         <div class="quick"><button type="button" data-d="1">Yarın</button><button type="button" data-d="3">+3 gün</button><button type="button" data-d="7">+1 hafta</button><button type="button" data-d="0">Temizle</button></div></div>
       <div class="f"><label for="f_fair">Fuar / Kaynak</label><input id="f_fair" list="fairs" placeholder="Örn. Eurasia Packaging 2026"></div>
       <div class="f full"><label for="f_desc">Açıklama</label><textarea id="f_desc" placeholder="Ne istiyor, kutu ölçüleri, kapasite, bütçe, teslim beklentisi…"></textarea></div>
+      <div class="f full"><label for="f_by">Kaydeden</label><input id="f_by" placeholder="Adınız (bu cihazda hatırlanır)"></div>
     </form>
     <div class="log" id="logBlock" hidden>
       <span class="lbl">Görüşme geçmişi</span>
@@ -237,83 +267,111 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
   </div>
 </section>
 <div class="toast" id="toast" role="status"></div>
+<div class="hint" id="installHint" hidden><b>Uygulama olarak kurun</b>Safari'de <svg viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4M5 12v8h14v-8"/></svg> Paylaş'a, ardından <b style="display:inline">Ana Ekrana Ekle</b>'ye dokunun.<button id="hintClose" type="button" aria-label="Kapat">×</button></div>
 
 <datalist id="countries"></datalist>
 <datalist id="fairs"></datalist>
+<script type="module">
+/* ============================================================
+   ORİMAK Fuar CRM — GitHub Pages sürümü
+   ------------------------------------------------------------
+   EKİPLE ORTAK KULLANIM İÇİN: aşağıdaki FIREBASE_CONFIG içine
+   Firebase Console → Proje ayarları → Web uygulaması → "Config"
+   bloğunu yapıştırın. Boş bırakılırsa uygulama yalnızca
+   o cihazda kayıt tutar.
+   ============================================================ */
+const FIREBASE_CONFIG = {
+  // apiKey: "…",
+  // authDomain: "…",
+  // projectId: "…",
+  // storageBucket: "…",
+  // messagingSenderId: "…",
+  // appId: "…"
+};
+const COLLECTION = "fuar_crm";          // Firestore koleksiyon adı
+const FB_VER = "10.12.2";
+const TESS_URL = "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js";
 
-<script>
+/* ---------------- sabitler ---------------- */
 const MODELS=[["Q-BOX","80 FEFCO · CNC kesim"],["BC410 pro","≤60 kg · kapatma"],["ORİTEQ Entegre Hat","kesim + kapatma"],["Yedek parça / Servis",""],["Diğer",""]];
 const STATUSES=[["new","Yeni","--s-new"],["contact","İletişimde","--s-contact"],["offer","Teklif verildi","--s-offer"],["visit","Ziyaret / Demo","--s-visit"],["won","Kazanıldı","--s-won"],["lost","Kaybedildi","--s-lost"]];
 const TEMPS=[["hot","Sıcak"],["warm","Ilık"],["cold","Soğuk"]];
-const COUNTRIES=[["Türkiye","TR"],["Almanya","DE"],["Azerbaycan","AZ"],["Irak","IQ"],["İran","IR"],["Suudi Arabistan","SA"],["Birleşik Arap Emirlikleri","AE"],["Katar","QA"],["Kuveyt","KW"],["Umman","OM"],["Ürdün","JO"],["Lübnan","LB"],["Mısır","EG"],["Libya","LY"],["Tunus","TN"],["Cezayir","DZ"],["Fas","MA"],["Nijerya","NG"],["Kenya","KE"],["Güney Afrika","ZA"],["Etiyopya","ET"],["Gürcistan","GE"],["Ermenistan","AM"],["Kazakistan","KZ"],["Özbekistan","UZ"],["Türkmenistan","TM"],["Kırgızistan","KG"],["Rusya","RU"],["Ukrayna","UA"],["Romanya","RO"],["Bulgaristan","BG"],["Yunanistan","GR"],["Sırbistan","RS"],["Bosna-Hersek","BA"],["Kosova","XK"],["Arnavutluk","AL"],["Kuzey Makedonya","MK"],["Macaristan","HU"],["Polonya","PL"],["Çekya","CZ"],["Avusturya","AT"],["İtalya","IT"],["Fransa","FR"],["İspanya","ES"],["Portekiz","PT"],["Hollanda","NL"],["Belçika","BE"],["Birleşik Krallık","GB"],["İsveç","SE"],["Danimarka","DK"],["Pakistan","PK"],["Hindistan","IN"],["Bangladeş","BD"],["Endonezya","ID"],["Malezya","MY"],["ABD","US"],["Kanada","CA"],["Meksika","MX"],["Brezilya","BR"],["Şili","CL"]];
-const flagOf=n=>{const c=COUNTRIES.find(x=>x[0].toLocaleLowerCase("tr")===(n||"").trim().toLocaleLowerCase("tr"));if(!c)return "🌐";if(c[1]==="XK")return "🇽🇰";return String.fromCodePoint(...[...c[1]].map(ch=>127397+ch.charCodeAt(0)));};
+const COUNTRIES=[["Türkiye","TR","90","turkey"],["Almanya","DE","49","germany"],["Azerbaycan","AZ","994","azerbaijan"],["Irak","IQ","964","iraq"],["İran","IR","98","iran"],["Suudi Arabistan","SA","966","saudi"],["Birleşik Arap Emirlikleri","AE","971","emirates|uae|dubai|abu dhabi|sharjah"],["Katar","QA","974","qatar|doha"],["Kuveyt","KW","965","kuwait"],["Umman","OM","968","oman|muscat"],["Ürdün","JO","962","jordan|amman"],["Lübnan","LB","961","lebanon|beirut"],["Mısır","EG","20","egypt|cairo"],["Libya","LY","218","libya|tripoli"],["Tunus","TN","216","tunisia"],["Cezayir","DZ","213","algeria|alger"],["Fas","MA","212","morocco|casablanca"],["Nijerya","NG","234","nigeria|lagos"],["Kenya","KE","254","kenya|nairobi"],["Güney Afrika","ZA","27","south africa"],["Etiyopya","ET","251","ethiopia"],["Gürcistan","GE","995","georgia|tbilisi"],["Ermenistan","AM","374","armenia"],["Kazakistan","KZ","7","kazakhstan|almaty"],["Özbekistan","UZ","998","uzbekistan|tashkent"],["Türkmenistan","TM","993","turkmenistan"],["Kırgızistan","KG","996","kyrgyz|bishkek"],["Rusya","RU","7","russia|moscow"],["Ukrayna","UA","380","ukraine|kyiv|kiev"],["Romanya","RO","40","romania|bucharest"],["Bulgaristan","BG","359","bulgaria|sofia"],["Yunanistan","GR","30","greece|athens"],["Sırbistan","RS","381","serbia|belgrade"],["Bosna-Hersek","BA","387","bosnia|sarajevo"],["Kosova","XK","383","kosovo|pristina"],["Arnavutluk","AL","355","albania|tirana"],["Kuzey Makedonya","MK","389","macedonia|skopje"],["Macaristan","HU","36","hungary|budapest"],["Polonya","PL","48","poland|warsaw"],["Çekya","CZ","420","czech|prague"],["Avusturya","AT","43","austria|vienna"],["İtalya","IT","39","italy|milano|milan|roma"],["Fransa","FR","33","france|paris"],["İspanya","ES","34","spain|madrid|barcelona"],["Portekiz","PT","351","portugal|lisbon"],["Hollanda","NL","31","netherlands|holland|amsterdam"],["Belçika","BE","32","belgium|brussels"],["Birleşik Krallık","GB","44","united kingdom|england|london|uk"],["İsveç","SE","46","sweden|stockholm"],["Danimarka","DK","45","denmark"],["Pakistan","PK","92","pakistan|karachi|lahore"],["Hindistan","IN","91","india|mumbai|delhi"],["Bangladeş","BD","880","bangladesh|dhaka"],["Endonezya","ID","62","indonesia|jakarta"],["Malezya","MY","60","malaysia|kuala"],["ABD","US","1","usa|united states"],["Kanada","CA","1","canada"],["Meksika","MX","52","mexico"],["Brezilya","BR","55","brazil"],["Şili","CL","56","chile"]];
+const flagOf=n=>{const c=COUNTRIES.find(x=>x[0].toLocaleLowerCase("tr")===(n||"").trim().toLocaleLowerCase("tr"));if(!c)return "🌐";return String.fromCodePoint(...[...c[1]].map(ch=>127397+ch.charCodeAt(0)));};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const todayISO=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
-const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+const localISO=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+const todayISO=()=>localISO(new Date());
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return localISO(d)};
 const fmtDate=iso=>{if(!iso)return "";const [y,m,d]=iso.split("-");return `${d}.${m}.${y}`};
 const fmtTime=ms=>new Date(ms).toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
 const stOf=k=>STATUSES.find(s=>s[0]===k)||STATUSES[0];
-
-$("countries").innerHTML=COUNTRIES.map(c=>`<option value="${c[0]}">`).join("");
-
-/* ---------- state ---------- */
-let leads=[], mode="wait", db=null, user=null, myId=null, canWrite=true, names={}, sampler=null, assets=null, pendingCard=null;
-let fStatus=null, fModel=null, query="";
-const LS="orimak_fuar_crm_v1";
 const lsGet=(k,f)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+$("countries").innerHTML=COUNTRIES.map(c=>`<option value="${c[0]}">`).join("");
 
-function setSync(kind,txt){$("syncDot").className="dot "+(kind||"");$("syncTxt").textContent=txt}
+/* ---------------- durum ---------------- */
+const LS="orimak_fuar_crm_local_v1";
+let leads=[], mode="wait", fb=null, pendingCount=0;
+let fStatus=null, fModel=null, query="";
+let editing=null, selModels=[], selTemp="warm", selStatus="new", delArmed=false, pendingCard="";
 
+function setSync(){
+  const dot=$("syncDot"), txt=$("syncTxt");
+  if(mode==="local"){dot.className="dot local";txt.textContent="Bu cihazda";return}
+  if(mode==="wait"){dot.className="dot";txt.textContent="Bağlanıyor…";return}
+  if(!navigator.onLine){dot.className="dot local";txt.textContent=pendingCount?`Çevrimdışı · ${pendingCount} bekliyor`:"Çevrimdışı";return}
+  if(pendingCount){dot.className="dot local";txt.textContent=`Gönderiliyor · ${pendingCount}`;return}
+  dot.className="dot on";txt.textContent="Ekip ile canlı";
+}
+addEventListener("online",setSync);addEventListener("offline",setSync);
+
+/* ---------------- veri katmanı ---------------- */
 async function boot(){
   render();
-  if(!window.claude||!window.claude.use){return useLocal()}
+  if(!FIREBASE_CONFIG||!FIREBASE_CONFIG.projectId)return useLocal("Firebase ayarı girilmedi; kayıtlar yalnızca bu cihazda tutuluyor.");
   try{
-    const [d,u]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
-    db=d;user=u;
-  }catch(e){db=null}
-  window.claude.use("sample").then(async s=>{
-    if(!s)return;const lim=await s.limits().catch(()=>null);
-    if(lim&&lim.images){sampler=s;if(editing===null&&$("sheet").classList.contains("open"))$("scanBtn").hidden=!canWrite}
-  }).catch(()=>{});
-  window.claude.use("assets").then(a=>{assets=a}).catch(()=>{});
-  if(!db)return useLocal();
-  mode="db";
-  if(user){try{myId=await user.id()}catch(e){}try{const w=await user.can("data.write");if(w===false)canWrite=false}catch(e){}}
-  if(!canWrite){$("fab").hidden=true;$("banner").innerHTML=`<div class="banner">Bu listeyi yalnızca görüntüleyebilirsiniz. Kayıt eklemek için sahibinden düzenleme izni isteyin.</div>`}
-  setSync("on","Ekip ile canlı");
-  db.collection("leads").onSnapshot(snap=>{
-    leads=snap.docs.map(d=>Object.assign({id:d.id},d.data()));
-    resolveNames();render();
-  },err=>{setSync("","Bağlantı kesildi");toast("Bağlantı kesildi. Sayfayı yenileyin.")});
+    const base=`https://www.gstatic.com/firebasejs/${FB_VER}/`;
+    const [A,F,U]=await Promise.all([import(base+"firebase-app.js"),import(base+"firebase-firestore.js"),import(base+"firebase-auth.js").catch(()=>null)]);
+    const app=A.initializeApp(FIREBASE_CONFIG);
+    let db;
+    try{db=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})})}
+    catch(e){db=F.getFirestore(app)}
+    if(U){try{await U.signInAnonymously(U.getAuth(app))}catch(e){/* anonim giriş kapalıysa kurallar izin veriyorsa yine çalışır */}}
+    fb={F,db,col:F.collection(db,COLLECTION)};
+    mode="db";setSync();
+    F.onSnapshot(fb.col,{includeMetadataChanges:true},snap=>{
+      leads=snap.docs.map(d=>Object.assign({id:d.id},d.data()));
+      pendingCount=snap.docs.filter(d=>d.metadata.hasPendingWrites).length;
+      setSync();render();
+      if(editing&&editing.id){const fresh=leads.find(l=>l.id===editing.id);if(fresh){editing.log=fresh.log;renderLog()}}
+    },err=>{
+      mode="err";$("syncDot").className="dot";$("syncTxt").textContent="Bağlantı hatası";
+      showBanner(err&&err.code==="permission-denied"
+        ?"Firebase erişimi reddetti. Firestore kurallarında "+COLLECTION+" koleksiyonuna izin verin (README'ye bakın)."
+        :"Ortak listeye bağlanılamadı. Sayfayı yenileyin.");
+    });
+  }catch(e){
+    console.error(e);
+    useLocal("Ortak listeye bağlanılamadı (internet yok veya Firebase yüklenemedi). Kayıtlar şimdilik bu cihazda tutuluyor.");
+  }
 }
-function useLocal(){
-  mode="local";leads=lsGet(LS,[]);
-  setSync("local","Bu cihazda");
-  $("banner").innerHTML=`<div class="banner">Ortak liste şu an açılamadı; kayıtlar bu cihazda tutuluyor. CSV ile yedek alabilirsiniz.</div>`;
-  render();
-}
-async function resolveNames(){
-  if(!user||!user.profiles)return;
-  const ids=[...new Set(leads.map(l=>l.createdBy).filter(Boolean))];
-  if(!ids.length)return;
-  try{const ps=await user.profiles(ids);ids.forEach(id=>{names[id]=(ps[id]&&ps[id].name)||""})}catch(e){}
-}
+function useLocal(msg){mode="local";leads=lsGet(LS,[]);setSync();showBanner(msg);render()}
+function showBanner(m){$("banner").innerHTML=m?`<div class="banner">${esc(m)}</div>`:""}
 
 async function persist(lead){
   const body=Object.assign({},lead);delete body.id;
   if(mode==="db"){
+    const {F}=fb;
     try{
-      if(lead.id){await db.doc("leads/"+lead.id).set(body)}
-      else{const r=await db.collection("leads").add(body);lead.id=r.id}
+      const ref=lead.id?F.doc(fb.col,lead.id):F.doc(fb.col);
+      lead.id=ref.id;
+      // Çevrimdışıyken setDoc sunucuyu bekler; yerel önbelleğe hemen yazılır, beklemeden devam ediyoruz.
+      const p=F.setDoc(ref,body);
+      if(navigator.onLine){await Promise.race([p,new Promise(r=>setTimeout(r,4000))])}
+      p.catch(e=>toast(e&&e.code==="permission-denied"?"Kaydedilemedi: Firebase izni yok.":"Kayıt sunucuya gönderilemedi."));
       return true;
-    }catch(e){
-      if(e&&e.code==="invalid_argument"&&canWrite===true){toast("Kaydedilemedi: bu listeye yazma izniniz yok.")}
-      else if(e&&e.code==="quota_exceeded"){toast("Liste dolu. Eski kayıtları silip tekrar deneyin.")}
-      else toast("Kaydedilemedi. İnternet bağlantısını kontrol edip tekrar deneyin.");
-      return false;
-    }
+    }catch(e){toast("Kaydedilemedi. Tekrar deneyin.");return false}
   }
   if(!lead.id)lead.id="L"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   const i=leads.findIndex(l=>l.id===lead.id);
@@ -321,46 +379,41 @@ async function persist(lead){
   lsSet(LS,leads);render();return true;
 }
 async function removeLead(id){
-  if(mode==="db"){try{await db.doc("leads/"+id).delete()}catch(e){toast("Silinemedi. Tekrar deneyin.");return false}return true}
+  if(mode==="db"){try{fb.F.deleteDoc(fb.F.doc(fb.col,id)).catch(()=>toast("Silme sunucuya gönderilemedi."));return true}catch(e){toast("Silinemedi.");return false}}
   leads=leads.filter(l=>l.id!==id);lsSet(LS,leads);render();return true;
 }
 
-/* ---------- render ---------- */
+/* ---------------- liste ---------------- */
 function isOpen(l){return l.status!=="won"&&l.status!=="lost"}
 function dueClass(l){if(!l.followUp||!isOpen(l))return "";const t=todayISO();return l.followUp<t?"late":l.followUp===t?"today":""}
 function matches(l){
   if(fStatus&&l.status!==fStatus)return false;
   if(fModel&&!(l.models||[]).includes(fModel))return false;
-  if(query){const hay=[l.name,l.company,l.country,l.desc,l.phone,l.email,l.fair,...(l.log||[]).map(x=>x.text)].join(" ").toLocaleLowerCase("tr");if(!hay.includes(query))return false}
+  if(query){const hay=[l.name,l.company,l.country,l.desc,l.phone,l.email,l.fair,l.by,...(l.log||[]).map(x=>x.text)].join(" ").toLocaleLowerCase("tr");if(!hay.includes(query))return false}
   return true;
 }
 function card(l,i){
   const st=stOf(l.status), dc=dueClass(l);
   const dueTxt=l.followUp&&isOpen(l)?(dc==="late"?"Gecikti · ":dc==="today"?"Bugün · ":"Takip · ")+fmtDate(l.followUp):"";
-  return `<button class="lead${typeof editing!=="undefined"&&editing&&editing.id===l.id?" sel":""}" type="button" data-id="${esc(l.id)}" style="--i:${Math.min(i,14)}">
+  return `<button class="lead${editing&&editing.id===l.id?" sel":""}" type="button" data-id="${esc(l.id)}" style="--i:${Math.min(i,14)}">
     <span class="flag" aria-hidden="true">${flagOf(l.country)}<i class="${esc(l.temp||"")}"></i></span>
     <span class="lead-main">
-      <span class="lead-name" style="display:block">${esc(l.name)}</span>
-      <span class="lead-sub" style="display:block">${esc([l.company,l.country].filter(Boolean).join(" · ")||"Firma / ülke girilmedi")}</span>
+      <span class="lead-name">${esc(l.name)}</span>
+      <span class="lead-sub">${esc([l.company,l.country].filter(Boolean).join(" · ")||"Firma / ülke girilmedi")}</span>
       ${(l.models||[]).length?`<span class="tags">${l.models.map(m=>`<span class="tag">${esc(m)}</span>`).join("")}</span>`:""}
     </span>
     <span class="lead-side"><span class="pill" style="--c:var(${st[2]})">${st[1]}</span>${dueTxt?`<span class="due ${dc}">${dueTxt}</span>`:""}</span>
   </button>`;
 }
 function render(){
-  // pipeline
   const counts={};STATUSES.forEach(s=>counts[s[0]]=0);leads.forEach(l=>counts[l.status||"new"]=(counts[l.status||"new"]||0)+1);
   $("pipe").innerHTML=`<button class="stage" type="button" data-st="" aria-pressed="${!fStatus}" style="--c:var(--ink)"><b>${leads.length}</b><small>Toplam</small></button>`+
     STATUSES.map(s=>`<button class="stage" type="button" data-st="${s[0]}" aria-pressed="${fStatus===s[0]}" style="--c:var(${s[2]})"><b>${counts[s[0]]}</b><small>${s[1]}</small></button>`).join("");
   $("modelFilters").innerHTML=MODELS.filter(m=>leads.some(l=>(l.models||[]).includes(m[0]))).map(m=>`<button class="chip" type="button" data-m="${esc(m[0])}" aria-pressed="${fModel===m[0]}">${esc(m[0])}</button>`).join("");
   $("fairs").innerHTML=[...new Set(leads.map(l=>l.fair).filter(Boolean))].map(f=>`<option value="${esc(f)}">`).join("");
-
-  // due block
   const t=todayISO();
   const due=leads.filter(l=>isOpen(l)&&l.followUp&&l.followUp<=t).sort((a,b)=>a.followUp.localeCompare(b.followUp));
   $("dueBlock").innerHTML=due.length&&!fStatus&&!fModel&&!query?`<div class="sec-h"><h2>Bugün aranacaklar</h2><span>${due.length}</span></div><div class="list">${due.map(card).join("")}</div>`:"";
-
-  // main list
   const rows=leads.filter(matches).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
   $("listTitle").textContent=fStatus?stOf(fStatus)[1]:fModel?fModel:query?"Arama sonuçları":"Tüm müşteriler";
   $("listCount").textContent=rows.length?rows.length+" kayıt":"";
@@ -368,20 +421,16 @@ function render(){
     $("list").innerHTML=`<div class="empty">
       <svg class="box" viewBox="0 0 84 62" aria-hidden="true"><path d="M8 20 42 8l34 12v30L42 58 8 50Z" fill="var(--kraft-soft)" stroke="var(--kraft)" stroke-width="2" stroke-linejoin="round"/><path d="M8 20l34 12 34-12M42 32v26" fill="none" stroke="var(--kraft)" stroke-width="2"/><path d="M25 14l34 12" stroke="var(--kraft)" stroke-width="2" stroke-dasharray="3 3"/></svg>
       <b>${mode==="wait"?"Liste yükleniyor":"Henüz müşteri yok"}</b>
-      ${mode==="wait"?"Ortak liste açılıyor…":"Standa gelen ilk ziyaretçiyi <strong>Yeni müşteri</strong> ile ekleyin. İsim, ülke, model ve açıklama yeterli."}</div>`;
-  }else if(!rows.length){
-    $("list").innerHTML=`<div class="empty"><b>Eşleşen kayıt yok</b>Aramayı veya filtreyi değiştirin.</div>`;
-  }else $("list").innerHTML=rows.map(card).join("");
+      ${mode==="wait"?"Ortak liste açılıyor…":"Standa gelen ilk ziyaretçiyi <strong>Yeni müşteri</strong> ile ekleyin. Kartvizit varsa fotoğrafını çekmeniz yeterli."}</div>`;
+  }else if(!rows.length){$("list").innerHTML=`<div class="empty"><b>Eşleşen kayıt yok</b>Aramayı veya filtreyi değiştirin.</div>`}
+  else $("list").innerHTML=rows.map(card).join("");
 }
-
-/* ---------- interactions ---------- */
 $("q").addEventListener("input",e=>{query=e.target.value.trim().toLocaleLowerCase("tr");render()});
 $("pipe").addEventListener("click",e=>{const b=e.target.closest(".stage");if(!b)return;fStatus=b.dataset.st&&fStatus!==b.dataset.st?b.dataset.st:null;render()});
 $("modelFilters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;fModel=fModel===b.dataset.m?null:b.dataset.m;render()});
 document.addEventListener("click",e=>{const c=e.target.closest(".lead");if(c)openSheet(leads.find(l=>l.id===c.dataset.id))});
 
-/* sheet */
-let editing=null, selModels=[], selTemp="warm", selStatus="new", delArmed=false;
+/* ---------------- form / panel ---------------- */
 function segRender(){
   $("f_models").innerHTML=MODELS.map(m=>`<button type="button" data-v="${esc(m[0])}" aria-pressed="${selModels.includes(m[0])}">${esc(m[0])}${m[1]?`<small>${esc(m[1])}</small>`:""}</button>`).join("");
   $("f_temp").innerHTML=TEMPS.map(t=>`<button type="button" data-v="${t[0]}" aria-pressed="${selTemp===t[0]}">${t[1]}</button>`).join("");
@@ -393,105 +442,51 @@ $("f_status").addEventListener("click",e=>{const b=e.target.closest("button");if
 document.querySelector(".quick").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const n=+b.dataset.d;$("f_follow").value=n?addDays(n):""});
 
 function openSheet(l){
-  editing=l?JSON.parse(JSON.stringify(l)):null;delArmed=false;
+  editing=l?JSON.parse(JSON.stringify(l)):null;delArmed=false;pendingCard="";
   $("sheetTitle").textContent=l?l.name:"Yeni müşteri";
   $("f_name").value=l?.name||"";$("f_company").value=l?.company||"";$("f_country").value=l?.country||"";
   $("f_phone").value=l?.phone||"";$("f_email").value=l?.email||"";$("f_follow").value=l?.followUp||"";
   $("f_fair").value=l?.fair||lsGet(LS+"_fair","");$("f_desc").value=l?.desc||"";
+  $("f_by").value=l?.by||lsGet(LS+"_by","");
   selModels=[...(l?.models||[])];selTemp=l?.temp||"warm";selStatus=l?.status||"new";segRender();
-  $("delBtn").hidden=!l||!canWrite;$("delBtn").classList.remove("arm");$("delBtn").textContent="Sil";
-  $("saveBtn").hidden=!canWrite;
-  $("logBlock").hidden=!l;
-  if(l)renderLog();
-  pendingCard=null;
-  $("scanBtn").hidden=!(sampler&&canWrite);
+  $("delBtn").hidden=!l;$("delBtn").classList.remove("arm");$("delBtn").textContent="Sil";
+  $("logBlock").hidden=!l;if(l)renderLog();
   $("scanTitle").textContent=l?"Kartviziti yeniden tara":"Kartvizit tara";
   $("scanSub").textContent=l?"Boş alanları karttan doldurur":"Fotoğraf çekin, bilgiler otomatik dolsun";
-  showCardImg(l&&l.cardImg?"/_blob/"+l.cardImg:"",l&&l.cardImg?"Kayıtlı kartvizit":"");
+  showCardImg(l&&l.cardImg?l.cardImg:"",l&&l.cardImg?"Kayıtlı kartvizit":"");
   $("scrim").classList.add("open");$("sheet").classList.add("open");
   document.querySelectorAll(".lead").forEach(c=>c.classList.toggle("sel",!!l&&c.dataset.id===l.id));
   $("sheet").querySelector(".sheet-body").scrollTop=0;
 }
-function closeSheet(){$("scrim").classList.remove("open");$("sheet").classList.remove("open");editing=null;pendingCard=null;document.querySelectorAll(".lead.sel").forEach(c=>c.classList.remove("sel"))}
-function showCardImg(src,txt){
-  const box=$("cardImg");
-  if(!src){box.hidden=true;box.innerHTML="";return}
-  box.hidden=false;box.innerHTML=`<img alt="Kartvizit" src="${esc(src)}"><p>${esc(txt)}</p>`;
-}
-
-/* ---------- business card scan ---------- */
-function downscale(file,max=1600){
-  return new Promise(res=>{
-    const img=new Image(),url=URL.createObjectURL(file);
-    img.onload=()=>{const k=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement("canvas");
-      c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext("2d").drawImage(img,0,0,c.width,c.height);
-      URL.revokeObjectURL(url);c.toBlob(b=>res(b||file),"image/jpeg",.85)};
-    img.onerror=()=>{URL.revokeObjectURL(url);res(file)};img.src=url;
-  });
-}
-$("scanBtn").addEventListener("click",()=>$("scanFile").click());
-$("scanFile").addEventListener("change",async e=>{
-  const file=e.target.files&&e.target.files[0];e.target.value="";
-  if(!file||!sampler)return;
-  const blob=await downscale(file);
-  const preview=URL.createObjectURL(blob);
-  showCardImg(preview,"Kart okunuyor…");
-  $("scanBtn").classList.add("busy");$("scanBtn").disabled=true;$("scanSub").textContent="Okunuyor, birkaç saniye sürebilir…";
-  const prompt=`Bu bir kartvizit fotoğrafı. Üzerindeki kişi ve firma bilgilerini oku.
-Yalnızca şu JSON nesnesiyle cevap ver, bulamadığın alanı boş string bırak:
-{"name":"","title":"","company":"","country":"","phone":"","email":"","website":"","address":""}
-Kurallar: name = kişinin adı soyadı (firma adı değil). phone = birden fazla varsa önce cep/WhatsApp, uluslararası formatta (+ ile). country = ülkeyi Türkçe adıyla yaz; şu listeden biri uyuyorsa aynen onu kullan: ${COUNTRIES.map(c=>c[0]).join(", ")}. Adres veya telefon kodundan ülkeyi çıkarabilirsin. Kart Arapça, Rusça veya başka alfabedeyse isim ve firmayı Latin harfleriyle yaz.`;
-  try{
-    const r=await sampler.json(prompt,{images:blob});
-    const v=k=>typeof r?.[k]==="string"?r[k].trim():"";
-    const isNew=!editing;
-    const fill=(id,val)=>{if(!val)return;const el=$(id);if(isNew||!el.value.trim()){el.value=val;el.classList.remove("filled");void el.offsetWidth;el.classList.add("filled")}};
-    fill("f_name",v("name"));fill("f_company",v("company"));fill("f_country",v("country"));fill("f_phone",v("phone"));fill("f_email",v("email"));
-    const extra=[v("title")&&"Ünvan: "+v("title"),v("website")&&"Web: "+v("website"),v("address")&&"Adres: "+v("address")].filter(Boolean).join("\n");
-    if(extra&&!$("f_desc").value.includes(extra)){$("f_desc").value=($("f_desc").value.trim()?$("f_desc").value.trim()+"\n":"")+extra;$("f_desc").classList.add("filled")}
-    if(v("name")&&isNew)$("sheetTitle").textContent=v("name");
-    pendingCard=blob;
-    showCardImg(preview,"Bilgiler karttan dolduruldu. Kontrol edip Kaydet'e basın.");
-    toast("Kartvizit okundu");
-  }catch(err){
-    const c=err&&err.code;
-    showCardImg(preview,c==="not_granted"?"Kart okuma için izin verilmedi.":c==="rate_limited"?"Kullanım limiti doldu, biraz sonra tekrar deneyin.":c==="image_rejected"?"Fotoğraf okunamadı, daha net bir fotoğraf çekin.":"Kart okunamadı. Tekrar deneyin veya elle girin.");
-    if(c==="not_granted"||c==="sampling_disabled"||c==="images_unavailable"){sampler=null;$("scanBtn").hidden=true}
-  }finally{
-    $("scanBtn").classList.remove("busy");$("scanBtn").disabled=false;
-    $("scanSub").textContent=editing?"Boş alanları karttan doldurur":"Fotoğraf çekin, bilgiler otomatik dolsun";
-  }
-});
+function closeSheet(){$("scrim").classList.remove("open");$("sheet").classList.remove("open");editing=null;pendingCard="";document.querySelectorAll(".lead.sel").forEach(c=>c.classList.remove("sel"))}
+function showCardImg(src,txt){const box=$("cardImg");if(!src){box.hidden=true;box.innerHTML="";return}box.hidden=false;box.innerHTML=`<img alt="Kartvizit" src="${esc(src)}"><p>${esc(txt)}</p>`}
 function renderLog(){
+  if(!editing)return;
   const log=(editing.log||[]).slice().sort((a,b)=>b.at-a.at);
-  $("logList").innerHTML=log.length?log.map(x=>`<div class="ev"><time>${fmtTime(x.at)}${x.by&&names[x.by]?" · "+esc(names[x.by]):""}</time><p>${esc(x.text)}</p></div>`).join(""):`<div class="due">Henüz not yok.</div>`;
-  const who=editing.createdBy&&names[editing.createdBy]?" · Ekleyen: "+names[editing.createdBy]:"";
-  $("metaLine").textContent=(editing.createdAt?"Kayıt: "+fmtTime(editing.createdAt):"")+who+(editing.updatedAt?" · Son güncelleme: "+fmtTime(editing.updatedAt):"");
+  $("logList").innerHTML=log.length?log.map(x=>`<div class="ev"><time>${fmtTime(x.at)}${x.by?" · "+esc(x.by):""}</time><p>${esc(x.text)}</p></div>`).join(""):`<div class="due">Henüz not yok.</div>`;
+  $("metaLine").textContent=[editing.createdAt?"Kayıt: "+fmtTime(editing.createdAt):"",editing.by?"Kaydeden: "+editing.by:"",editing.updatedAt?"Son güncelleme: "+fmtTime(editing.updatedAt):""].filter(Boolean).join(" · ");
 }
 function collect(){
   const now=Date.now();
-  const base=editing||{createdAt:now,createdBy:myId||null,log:[]};
-  return Object.assign({},base,{
+  const base=editing||{createdAt:now,log:[]};
+  const out=Object.assign({},base,{
     name:$("f_name").value.trim(),company:$("f_company").value.trim(),country:$("f_country").value.trim(),
     phone:$("f_phone").value.trim(),email:$("f_email").value.trim(),models:selModels,temp:selTemp,status:selStatus,
-    followUp:$("f_follow").value||"",fair:$("f_fair").value.trim(),desc:$("f_desc").value.trim(),updatedAt:now
+    followUp:$("f_follow").value||"",fair:$("f_fair").value.trim(),desc:$("f_desc").value.trim(),by:$("f_by").value.trim(),updatedAt:now
   });
+  if(pendingCard)out.cardImg=pendingCard;
+  return out;
 }
 $("saveBtn").addEventListener("click",async()=>{
   if(!$("f_name").value.trim()){$("f_name").focus();toast("Ad Soyad gerekli.");return}
   const lead=collect();const wasNew=!editing;
-  if(lead.fair)lsSet(LS+"_fair",lead.fair);
-  $("saveBtn").disabled=true;
-  if(pendingCard&&assets&&mode==="db"){
-    try{const up=await assets.upload(pendingCard);lead.cardImg=up.id}catch(e){toast("Kart fotoğrafı saklanamadı; bilgiler kaydediliyor.")}
-  }
-  const ok=await persist(lead);
-  $("saveBtn").disabled=false;
-  if(ok){closeSheet();toast(wasNew?"Müşteri eklendi":"Kaydedildi")}
+  if(lead.fair)lsSet(LS+"_fair",lead.fair);if(lead.by)lsSet(LS+"_by",lead.by);
+  $("saveBtn").disabled=true;const ok=await persist(lead);$("saveBtn").disabled=false;
+  if(ok){closeSheet();toast(!navigator.onLine&&mode==="db"?"Kaydedildi · internet gelince gönderilecek":wasNew?"Müşteri eklendi":"Kaydedildi")}
 });
 $("logBtn").addEventListener("click",async()=>{
   const v=$("logInput").value.trim();if(!v||!editing)return;
-  const lead=collect();lead.log=[...(editing.log||[]),{at:Date.now(),text:v,by:myId||null}];
+  const lead=collect();lead.log=[...(editing.log||[]),{at:Date.now(),text:v,by:$("f_by").value.trim()}];
   if(await persist(lead)){editing=lead;$("logInput").value="";renderLog();toast("Not eklendi")}
 });
 $("logInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("logBtn").click()}});
@@ -504,22 +499,127 @@ $("closeBtn").addEventListener("click",closeSheet);
 $("scrim").addEventListener("click",closeSheet);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
 
-/* export */
-$("exportBtn").addEventListener("click",async()=>{
-  if(!leads.length){toast("Dışa aktarılacak kayıt yok.");return}
-  const head=["Ad Soyad","Firma","Ülke","Telefon","E-posta","Modeller","İlgi","Durum","Takip tarihi","Fuar","Açıklama","Notlar","Kayıt tarihi"];
-  const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  const rows=leads.map(l=>[l.name,l.company,l.country,l.phone,l.email,(l.models||[]).join(", "),(TEMPS.find(t=>t[0]===l.temp)||["",""])[1],stOf(l.status)[1],fmtDate(l.followUp),l.fair,l.desc,(l.log||[]).map(x=>fmtTime(x.at)+": "+x.text).join(" | "),l.createdAt?fmtTime(l.createdAt):""].map(q).join(";"));
-  const csv="﻿"+[head.map(q).join(";"),...rows].join("\r\n");
-  const name=`orimak_fuar_musteriler_${todayISO()}.csv`;
-  let dl=null;try{dl=window.claude&&await window.claude.use("downloads")}catch(e){}
-  if(dl){try{await dl.save({filename:name,data:csv});toast("CSV hazır")}catch(e){if(e&&e.code!=="declined")toast("Dosya kaydedilemedi.")}return}
-  try{await navigator.clipboard.writeText(csv);toast("CSV panoya kopyalandı")}catch(e){toast("Dışa aktarma bu görünümde açık değil.")}
+/* ---------------- kartvizit okuma (cihazda, Tesseract) ---------------- */
+function loadImage(file){return new Promise((res,rej)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(url);res(img)};img.onerror=e=>{URL.revokeObjectURL(url);rej(e)};img.src=url})}
+function toCanvas(img,max,gray){
+  const k=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement("canvas");
+  c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);const x=c.getContext("2d");x.drawImage(img,0,0,c.width,c.height);
+  if(gray){const d=x.getImageData(0,0,c.width,c.height),p=d.data;for(let i=0;i<p.length;i+=4){let v=.299*p[i]+.587*p[i+1]+.114*p[i+2];v=v>150?255:v<90?0:v;p[i]=p[i+1]=p[i+2]=v}x.putImageData(d,0,0)}
+  return c;
+}
+let tessPromise=null;
+function loadTesseract(){
+  if(window.Tesseract)return Promise.resolve(window.Tesseract);
+  if(!tessPromise)tessPromise=new Promise((res,rej)=>{const s=document.createElement("script");s.src=TESS_URL;s.onload=()=>res(window.Tesseract);s.onerror=()=>{tessPromise=null;rej(new Error("tesseract"))};document.head.appendChild(s)});
+  return tessPromise;
+}
+const COMPANY_RX=/\b(ltd|limited|a\.?ş|aş|san\.?|tic\.?|sanayi|ticaret|gmbh|inc|llc|l\.l\.c|co\.|corp|company|group|grup|holding|s\.?a\.?|s\.?r\.?l|spa|bv|packaging|ambalaj|karton|kağıt|paper|industries|industry|trading|factory|fabrika|est\.?|w\.?l\.?l|fze|fzc|jsc|ooo|too)\b/i;
+const TITLE_RX=/\b(manager|director|müdür|mudur|müdürü|ceo|cfo|coo|cto|owner|founder|president|chairman|engineer|mühendis|sales|satış|export|ihracat|purchas|satın ?alma|procurement|general|genel|head|chief|executive|officer|uzman|specialist|representative|temsilci|partner|ortak|yönetici|supervisor|coordinator|koordinatör|consultant)\b/i;
+function parseCard(text){
+  const lines=text.split(/\n+/).map(s=>s.replace(/[|_~`"“”]+/g," ").replace(/\s{2,}/g," ").trim()).filter(s=>s.length>1);
+  const all=lines.join("\n");
+  let email=(all.match(/[A-Za-z0-9._%+-]+\s?@\s?[A-Za-z0-9.-]+\.[A-Za-z]{2,}/)||[""])[0].replace(/\s/g,"").toLowerCase();
+  const webM=all.match(/\b(?:https?:\/\/)?(?:www\.)[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?:\/\S*)?/i);
+  const website=webM?webM[0].toLowerCase():"";
+  // telefonlar
+  const phones=[];
+  lines.forEach(l=>{
+    const ms=l.match(/(?:\+|00)?\(?\d[\d\s().\/-]{7,}\d/g)||[];
+    ms.forEach(m=>{let d=m.replace(/[^\d+]/g,"");if(d.startsWith("00"))d="+"+d.slice(2);const digits=d.replace(/\D/g,"");if(digits.length<9||digits.length>15)return;
+      const mobile=/(mob|gsm|cep|cell|whats|m\s*[:.]|mobile|موبايل)/i.test(l);const fax=/fax|faks|f\s*[:.]/i.test(l);
+      phones.push({n:d,mobile,fax})});
+  });
+  phones.sort((a,b)=>(b.mobile-a.mobile)||(a.fax-b.fax));
+  let phone=phones.length?phones[0].n:"";
+  if(phone&&!phone.startsWith("+")&&phone.startsWith("0")&&phone.length===11)phone="+90"+phone.slice(1);
+  if(phone&&!phone.startsWith("+")&&phone.startsWith("5")&&phone.length===10)phone="+90"+phone;
+  // ülke
+  let country="";
+  const low=all.toLocaleLowerCase("tr");
+  for(const c of COUNTRIES){if(low.includes(c[0].toLocaleLowerCase("tr"))||new RegExp("\\b("+c[3]+")\\b","i").test(all)){country=c[0];break}}
+  if(!country){const ph=(phones.find(p=>p.n.startsWith("+"))||{}).n||"";if(ph){const byLen=[...COUNTRIES].sort((a,b)=>b[2].length-a[2].length);const c=byLen.find(c=>ph.slice(1).startsWith(c[2])&&c[2]!=="1"&&c[2]!=="7");if(c)country=c[0]}}
+  if(!country&&/\.com\.tr|\.tr\b/i.test(email+website))country="Türkiye";
+  // ünvan, firma, isim
+  const isContact=l=>/@|www\.|https?:|\d{3}/i.test(l);
+  const title=lines.find(l=>TITLE_RX.test(l)&&!isContact(l)&&l.length<60)||"";
+  let company=lines.find(l=>COMPANY_RX.test(l)&&!isContact(l))||"";
+  const nameCand=lines.filter(l=>{
+    if(isContact(l)||COMPANY_RX.test(l)||TITLE_RX.test(l))return false;
+    if(/\d/.test(l))return false;
+    const w=l.split(" ").filter(Boolean);if(w.length<2||w.length>4)return false;
+    if(!/^[\p{L}.' -]+$/u.test(l))return false;
+    return w.every(x=>/^[\p{Lu}]/u.test(x));
+  });
+  let name="";
+  if(title){const ti=lines.indexOf(title);const near=nameCand.find(l=>Math.abs(lines.indexOf(l)-ti)===1);if(near)name=near}
+  if(!name&&nameCand.length)name=nameCand[0];
+  if(!name&&email){const lp=email.split("@")[0];const parts=lp.split(/[._-]/).filter(p=>/^[a-zçğıöşü]{2,}$/i.test(p));if(parts.length>=2&&parts.length<=3)name=parts.join(" ")}
+  if(email&&website){const wd=website.replace(/^https?:\/\//,"").replace(/^www\./,"").split("/")[0];const [lp,ed]=email.split("@");if(ed&&ed!==wd&&ed.endsWith(wd))email=lp+"@"+wd}
+  if(name&&(name===name.toUpperCase()||name===name.toLowerCase()))name=name.toLocaleLowerCase("tr").replace(/(^|\s)(\p{L})/gu,(m,s,c)=>s+c.toLocaleUpperCase("tr"));
+  if(!company&&email){const dom=email.split("@")[1]||"";const generic=/gmail|hotmail|yahoo|outlook|icloud|yandex|mail\.ru|live\./i;if(dom&&!generic.test(dom)){const b=dom.split(".")[0];company=b.charAt(0).toUpperCase()+b.slice(1)}}
+  const address=lines.find(l=>/(cad|sok|mah|street|st\.|road|rd\.|avenue|blvd|no[:.]|p\.?o\.? box|osb|zone|district)/i.test(l)&&!/@/.test(l))||"";
+  return {name,title,company,country,phone,email,website,address};
+}
+$("scanBtn").addEventListener("click",()=>$("scanFile").click());
+$("scanFile").addEventListener("change",async e=>{
+  const file=e.target.files&&e.target.files[0];e.target.value="";if(!file)return;
+  let img;try{img=await loadImage(file)}catch(err){toast("Fotoğraf açılamadı.");return}
+  const thumb=toCanvas(img,900,false).toDataURL("image/jpeg",.72);
+  showCardImg(thumb,"Kart okunuyor…");
+  const btn=$("scanBtn");btn.classList.add("busy");btn.disabled=true;$("scanSub").textContent="Okuma aracı hazırlanıyor…";
+  try{
+    const T=await loadTesseract();
+    const worker=await T.createWorker(["eng","tur"],1,{logger:m=>{if(m.status==="recognizing text")$("scanSub").textContent=`Okunuyor… %${Math.round(m.progress*100)}`;else if(/loading/.test(m.status))$("scanSub").textContent="Dil paketi yükleniyor (ilk seferde biraz sürer)…"}});
+    const {data}=await worker.recognize(toCanvas(img,2200,true));
+    await worker.terminate();
+    const r=parseCard(data.text||"");
+    const isNew=!editing;let n=0;
+    const fill=(id,val)=>{if(!val)return;const el=$(id);if(isNew||!el.value.trim()){el.value=val;n++;el.classList.remove("filled");void el.offsetWidth;el.classList.add("filled")}};
+    fill("f_name",r.name);fill("f_company",r.company);fill("f_country",r.country);fill("f_phone",r.phone);fill("f_email",r.email);
+    const extra=[r.title&&"Ünvan: "+r.title,r.website&&"Web: "+r.website,r.address&&"Adres: "+r.address].filter(Boolean).join("\n");
+    if(extra&&!$("f_desc").value.includes(extra)){$("f_desc").value=($("f_desc").value.trim()?$("f_desc").value.trim()+"\n":"")+extra;$("f_desc").classList.add("filled")}
+    if(r.name&&isNew)$("sheetTitle").textContent=r.name;
+    pendingCard=thumb;
+    showCardImg(thumb,n?"Bilgiler karttan dolduruldu. Kontrol edip Kaydet'e basın.":"Karttan net bilgi çıkarılamadı; fotoğraf kayda eklendi, bilgileri elle girin.");
+    toast(n?"Kartvizit okundu":"Kart okunamadı");
+  }catch(err){
+    console.error(err);pendingCard=thumb;
+    showCardImg(thumb,navigator.onLine?"Kart okunamadı. Fotoğraf kayda eklendi, bilgileri elle girin.":"Okuma aracı internetsiz ilk kez yüklenemiyor. Fotoğraf kayda eklendi; internet varken bir kez deneyin.");
+  }finally{btn.classList.remove("busy");btn.disabled=false;$("scanSub").textContent=editing?"Boş alanları karttan doldurur":"Fotoğraf çekin, bilgiler otomatik dolsun"}
 });
 
-let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2200)}
+/* ---------------- dışa aktarma ---------------- */
+function download(name,data,type){
+  const blob=new Blob([data],{type});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
+}
+$("exportBtn").addEventListener("click",()=>{
+  if(!leads.length){toast("Dışa aktarılacak kayıt yok.");return}
+  const head=["Ad Soyad","Firma","Ülke","Telefon","E-posta","Modeller","İlgi","Durum","Takip tarihi","Fuar","Açıklama","Notlar","Kaydeden","Kayıt tarihi"];
+  const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const rows=leads.map(l=>[l.name,l.company,l.country,l.phone,l.email,(l.models||[]).join(", "),(TEMPS.find(t=>t[0]===l.temp)||["",""])[1],stOf(l.status)[1],fmtDate(l.followUp),l.fair,l.desc,(l.log||[]).map(x=>fmtTime(x.at)+": "+x.text).join(" | "),l.by,l.createdAt?fmtTime(l.createdAt):""].map(q).join(";"));
+  download(`orimak_fuar_musteriler_${todayISO()}.csv`,"﻿"+[head.map(q).join(";"),...rows].join("\r\n"),"text/csv;charset=utf-8");
+  toast("CSV indirildi");
+});
+$("backupBtn").addEventListener("click",()=>{
+  if(!leads.length){toast("Yedeklenecek kayıt yok.");return}
+  download(`orimak_fuar_yedek_${todayISO()}.json`,JSON.stringify({app:"orimak-fuar-crm",at:Date.now(),leads},null,1),"application/json");
+  toast("Yedek indirildi");
+});
+
+let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2400)}
+
+/* ---------------- PWA ---------------- */
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+(function iosHint(){
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const standalone=navigator.standalone||matchMedia("(display-mode: standalone)").matches;
+  if(!ios||standalone||lsGet(LS+"_hint",false))return;
+  const h=$("installHint");h.hidden=false;
+  $("hintClose").addEventListener("click",()=>{h.hidden=true;lsSet(LS+"_hint",true)});
+})();
 
 boot();
 </script>
-
-</body></html>
+</body>
+</html>
