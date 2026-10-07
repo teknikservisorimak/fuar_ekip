@@ -215,7 +215,13 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .btn.send.sent{background:var(--surface-2);border-color:var(--line);color:var(--muted);min-height:44px;font-size:14px}
 .btn.send:disabled{opacity:.6}
 .step2{display:flex;flex-direction:column;gap:8px;animation:rise .3s both}
-.s2txt{font-size:13px;color:var(--muted);line-height:1.4}.s2txt b{color:var(--ink)}
+.s2txt{font-size:13.5px;color:var(--muted);line-height:1.45;padding:10px 12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}.s2txt b{color:var(--ink)}
+.s2txt.ok{border-color:color-mix(in srgb,#1E8A56 45%,var(--line));background:color-mix(in srgb,#1E8A56 8%,var(--surface))}
+.s2txt .kbd{display:inline-block;padding:1px 7px;border-radius:6px;background:var(--ink);color:var(--bg);font-weight:600;font-size:12px}
+.s2row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn.alt{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;background:var(--surface);color:var(--ink)}
+.btn.alt svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2}
+.btn.alt:disabled{opacity:.55}
 .pulse{animation:pulse 1.8s ease-in-out infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,138,86,.5)}70%{box-shadow:0 0 0 12px rgba(30,138,86,0)}100%{box-shadow:0 0 0 0 rgba(30,138,86,0)}}
 .seg.tabs{display:grid;grid-template-columns:1fr 1fr}
@@ -402,8 +408,11 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
     <div class="steps" id="sendSteps">
       <button class="btn send" id="sendBtn" type="button"><svg viewBox="0 0 24 24"><path d="M3 21l1.6-4.6A9 9 0 1 1 8 20.2z"/></svg><span id="sendLbl">Teklifi WhatsApp'tan gönder</span></button>
       <div class="step2" id="step2" hidden>
-        <div class="s2txt"><b>Son adım</b> WhatsApp'ta sohbet açıldı. Şimdi PDF'i gönderin ve listede <b id="s2name">müşterinin</b> sohbetini seçin.</div>
-        <button class="btn send pulse" id="pdfBtn" type="button"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 14l3 3 3-3M12 10v7"/></svg><span id="pdfLbl">PDF'i sohbete gönder</span></button>
+        <div class="s2txt" id="s2txt"></div>
+        <div class="s2row">
+          <button class="btn alt" id="imgShareBtn" type="button"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg><span>Görseli paylaş</span></button>
+          <button class="btn alt" id="pdfBtn" type="button"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 14l3 3 3-3M12 10v7"/></svg><span id="pdfLbl">PDF'i gönder</span></button>
+        </div>
       </div>
     </div>
   </div>
@@ -855,19 +864,21 @@ function countryIn(name,lang){
 }
 const STD_KEYS=["delivery","incoterm","payment","warranty","intro","terms","closing"];
 const OFIELDS={price:"o_price",discount:"o_disc",validityDays:"o_valid",delivery:"o_delivery",incoterm:"o_incoterm",payment:"o_payment",warranty:"o_warranty",intro:"o_intro",terms:"o_terms",closing:"o_closing",note:"o_note",phone:"o_phone",by:"o_by",byTitle:"o_byTitle",byPhone:"o_byPhone",byEmail:"o_byEmail"};
-let od=null, offerLead=null, finalOffer=null, pdfCache={key:"",blob:null,busy:null};
+let od=null, offerLead=null, finalOffer=null, pdfCache={key:"",blob:null,busy:null}, imgCache={key:"",blob:null,busy:null,failed:false}, imgTimer;
+function genNo(){const d=new Date();return "TKL-"+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+"-"+Math.random().toString(36).slice(2,6).toUpperCase()}
 function applyStd(lang){const s=catalog.std[lang]||{};STD_KEYS.forEach(k=>od[k]=s[k]||"")}
 function newDraft(lead){
   const m=catalog.machines.find(x=>(lead.models||[]).includes(x.name))||catalog.machines[0]||null;
   const lang=lead.country&&lead.country!=="Türkiye"?"en":"tr";
   od={lang,machineId:m?m.id:"",opts:[],price:m?m.price:"",currency:catalog.currency||"EUR",discount:"",validityDays:catalog.std.validityDays||"30",note:"",
     phone:lead.phone||"",by:$("f_by").value.trim()||lsGet(LS+"_by",""),byTitle:lsGet(LS+"_byTitle",""),byPhone:lsGet(LS+"_byPhone",""),byEmail:lsGet(LS+"_byEmail","")};
+  od.no=genNo();
   applyStd(lang);
 }
 function curMachine(){return catalog.machines.find(m=>m.id===od.machineId)||null}
 function buildOffer(){
   const m=curMachine();const L=od.lang;
-  const o={lang:L,createdAt:Date.now(),leadId:offerLead.id||"",
+  const o={lang:L,no:od.no,createdAt:Date.now(),leadId:offerLead.id||"",
     customer:{name:offerLead.name||"",company:offerLead.company||"",country:countryIn(offerLead.country,L),phone:od.phone,email:offerLead.email||""},
     machine:{id:m?m.id:"",name:m?m.name:"",price:od.price,specs:m?(m.specs[L]&&m.specs[L].length?m.specs[L]:m.specs.tr):[]},
     options:m?m.options.filter(x=>od.opts.includes(x.id)).map(x=>({name:(L==="en"?x.en||x.tr:x.tr||x.en),price:x.price})):[],
@@ -888,21 +899,41 @@ function renderOffer(){
   updateSummary();
 }
 let pvTimer;
-function offerKey(o){return JSON.stringify(Object.assign({},o,{createdAt:0,no:"",id:""}))}
+function offerKey(o){return JSON.stringify(Object.assign({},o,{createdAt:0,id:""}))}
 function updateSummary(){
   const o=buildOffer();const t=Teklif.total(o);
   $("sumLbl").textContent=t.discount?"Genel toplam (indirimli)":"Genel toplam";
   $("sumVal").textContent=t.hasPrice?Teklif.money(t.total,o):"Fiyatsız teklif";
   $("sumNote").textContent=o.machine.name?o.machine.name+(o.options.length?` + ${o.options.length} seçenek`:""):"";
   clearTimeout(pvTimer);pvTimer=setTimeout(()=>renderPreview(o),150);
-  if(finalOffer&&offerKey(Object.assign({},finalOffer))!==offerKey(o))resetSend();
+  if(finalOffer&&offerKey(Object.assign({},finalOffer))!==offerKey(Object.assign({},o,{no:finalOffer.no}))){resetSend();return}
+  // görseli önceden hazırla: Gönder'e basıldığında panoya hemen kopyalanabilsin
+  if(finalOffer)return;
+  const k=offerKey(o);
+  if(imgCache.key!==k){imgCache={key:k,blob:null,busy:null,failed:false};sendState()}
+  clearTimeout(imgTimer);
+  if(o.machine.name)imgTimer=setTimeout(()=>{if($("offerSheet").classList.contains("open"))makeImg(buildOffer()).catch(()=>{})},700);
+}
+function sendState(){
+  if(finalOffer)return;
+  const ready=imgCache.blob||imgCache.failed;
+  $("sendBtn").disabled=!ready;
+  $("sendLbl").textContent=ready?"Teklifi WhatsApp'tan gönder":"Teklif görseli hazırlanıyor…";
+}
+function makeImg(o){
+  const key=offerKey(o);
+  if(imgCache.key===key&&imgCache.blob)return Promise.resolve(imgCache.blob);
+  if(imgCache.key===key&&imgCache.busy)return imgCache.busy;
+  imgCache={key,blob:null,failed:false,busy:Teklif.image(o).then(b=>{if(imgCache.key===key){imgCache.blob=b;imgCache.busy=null;sendState()}return b}).catch(e=>{if(imgCache.key===key){imgCache.busy=null;imgCache.failed=true;sendState()}throw e})};
+  sendState();
+  return imgCache.busy;
 }
 function renderPreview(o){
   const pv=$("pv");const w=pv.clientWidth||340;const k=w/794;
   pv.innerHTML=`<div style="transform:scale(${k});width:794px">${Teklif.html(Object.assign({},o,{no:o.no||"TKL-……"}))}</div>`;
   const inner=pv.firstElementChild.firstElementChild;pv.style.height=Math.ceil(inner.offsetHeight*k)+"px";
 }
-function resetSend(){finalOffer=null;$("step2").hidden=true;$("sendBtn").classList.remove("sent");$("sendLbl").textContent="Teklifi WhatsApp'tan gönder"}
+function resetSend(){if(finalOffer&&od)od.no=genNo();finalOffer=null;$("step2").hidden=true;$("sendBtn").classList.remove("sent");sendState()}
 $("o_lang").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.dataset.v===od.lang)return;od.lang=b.dataset.v;applyStd(od.lang);renderOffer()});
 $("o_machines").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;od.machineId=b.dataset.v;od.opts=[];const m=curMachine();od.price=m?m.price:"";renderOffer()});
 $("o_opts").addEventListener("change",e=>{const c=e.target.closest("input");if(!c)return;const v=c.dataset.v;od.opts=c.checked?[...od.opts,v]:od.opts.filter(x=>x!==v);updateSummary()});
@@ -915,9 +946,8 @@ $("offerBtn").addEventListener("click",async()=>{
     const lead=collect();if(lead.by)lsSet(LS+"_by",lead.by);
     if(!(await persist(lead)))return;editing=JSON.parse(JSON.stringify(lead));$("delBtn").hidden=false;$("logBlock").hidden=false;renderLog();
   }else{editing=Object.assign(editing,collect())}
-  offerLead=editing;newDraft(offerLead);pdfCache={key:"",blob:null,busy:null};resetSend();
+  offerLead=editing;newDraft(offerLead);pdfCache={key:"",blob:null,busy:null};imgCache={key:"",blob:null,busy:null,failed:false};finalOffer=null;$("step2").hidden=true;$("sendBtn").classList.remove("sent");sendState();
   $("offerTitle").textContent="Teklif · "+(offerLead.name||"");
-  $("s2name").textContent=(offerLead.name||"müşterinin")+(offerLead.name?" adlı kişinin":"");
   $("offerSheet").classList.add("open");$("offerSheet").querySelector(".sheet-body").scrollTop=0;
   renderOffer();
 });
@@ -926,7 +956,6 @@ $("offerClose").addEventListener("click",()=>{$("offerSheet").classList.remove("
 function finalize(){
   if(finalOffer)return finalOffer;
   const o=buildOffer();
-  const d=new Date();o.no="TKL-"+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+"-"+Math.random().toString(36).slice(2,6).toUpperCase();
   let id="";
   if(mode==="db"){const ref=fb.F.doc(fb.F.collection(fb.db,"fuar_teklif"));id=ref.id;fb.F.setDoc(ref,o).catch(e=>toast(e&&e.code==="permission-denied"?"Teklif arşive kaydedilemedi: Firebase izni yok.":"Teklif arşive gönderilemedi."))}
   o.id=id;finalOffer=o;
@@ -946,29 +975,53 @@ function makePdf(o){
   if(pdfCache.key===key&&pdfCache.blob)return Promise.resolve(pdfCache.blob);
   if(pdfCache.key===key&&pdfCache.busy)return pdfCache.busy;
   $("pdfLbl").textContent="PDF hazırlanıyor…";$("pdfBtn").disabled=true;
-  pdfCache={key,blob:null,busy:Teklif.pdf(o).then(b=>{pdfCache.blob=b;pdfCache.busy=null;$("pdfLbl").textContent="PDF'i sohbete gönder";$("pdfBtn").disabled=false;return b}).catch(e=>{pdfCache.busy=null;$("pdfLbl").textContent="PDF'i sohbete gönder";$("pdfBtn").disabled=false;throw e})};
+  pdfCache={key,blob:null,busy:Teklif.pdf(o).then(b=>{pdfCache.blob=b;pdfCache.busy=null;$("pdfLbl").textContent="PDF'i gönder";$("pdfBtn").disabled=false;return b}).catch(e=>{pdfCache.busy=null;$("pdfLbl").textContent="PDF'i gönder";$("pdfBtn").disabled=false;throw e})};
   return pdfCache.busy;
+}
+function step2(copied){
+  const nm=esc(offerLead&&offerLead.name||"müşterinin");
+  $("s2txt").className="s2txt"+(copied?" ok":"");
+  $("s2txt").innerHTML=copied
+    ?`<b>Teklif görseli kopyalandı.</b> WhatsApp'ta mesaj kutusuna basılı tutun → <span class="kbd">Yapıştır</span> → <span class="kbd">Gönder</span>. PDF'i de göndermek için aşağıdaki butonu kullanın.`
+    :`WhatsApp'ta sohbet açıldı. Görseli veya PDF'i aşağıdan paylaşın, listede <b>${nm}</b> sohbetini seçin.`;
+  $("step2").hidden=false;
 }
 $("sendBtn").addEventListener("click",()=>{
   if(!curMachine()){toast("Önce makine seçin.");return}
   const num=waNumber(od.phone);
   if(num.length<8){$("o_phone").focus();$("o_phone").scrollIntoView({block:"center",behavior:"smooth"});toast("Müşterinin WhatsApp numarasını ülke koduyla girin.");return}
   const o=finalize();
-  makePdf(o).catch(()=>toast(navigator.onLine?"PDF oluşturulamadı.":"PDF aracı internetsiz ilk kez yüklenemiyor."));
+  const blob=imgCache.key===offerKey(o)?imgCache.blob:null;
+  let copyP=Promise.resolve(false);
+  // 1) görseli panoya kopyala (dokunuş anında, görsel hazır olduğu için hemen)
+  if(blob&&navigator.clipboard&&window.ClipboardItem){
+    try{copyP=navigator.clipboard.write([new ClipboardItem({"image/png":blob})]).then(()=>true,()=>false)}catch(e){copyP=Promise.resolve(false)}
+  }
+  // 2) WhatsApp'ı müşterinin sohbetinde aç
   const url="https://wa.me/"+num+"?text="+encodeURIComponent(Teklif.message(o));
-  const w=window.open(url,"_blank");if(!w)location.href=url;
-  $("sendBtn").classList.add("sent");$("sendLbl").textContent="Sohbeti tekrar aç";
-  $("step2").hidden=false;
+  setTimeout(()=>{const w=window.open(url,"_blank");if(!w)location.href=url},150);
+  $("sendBtn").classList.add("sent");$("sendBtn").disabled=false;$("sendLbl").textContent="Sohbeti tekrar aç";
+  copyP.then(ok=>step2(ok));
+  makePdf(o).catch(()=>{});
+});
+async function shareBlob(blob,name,type){
+  const file=new File([blob],name,{type});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file]});toast("Gönderildi")}catch(e){if(e&&e.name!=="AbortError")toast("Paylaşılamadı.")}
+  }else{download(name,blob,type);toast("Dosya indirildi (bu cihaz doğrudan paylaşımı desteklemiyor)")}
+}
+$("imgShareBtn").addEventListener("click",async()=>{
+  if(!finalOffer)return;
+  let b=imgCache.key===offerKey(finalOffer)?imgCache.blob:null;
+  if(!b){try{b=await makeImg(finalOffer)}catch(e){toast("Görsel oluşturulamadı.");return} if(navigator.share){toast("Görsel hazır, paylaşmak için tekrar dokunun.");return}}
+  shareBlob(b,(finalOffer.no||"teklif")+".png","image/png");
 });
 async function sharePdf(o){
   const name=(o.no||"teklif")+".pdf";
   let blob=pdfCache.key===offerKey(o)?pdfCache.blob:null;
   if(!blob){try{blob=await makePdf(o)}catch(e){toast(navigator.onLine?"PDF oluşturulamadı.":"PDF aracı internetsiz ilk kez yüklenemiyor.");return}
     if(navigator.share){toast("PDF hazır, göndermek için tekrar dokunun.");return}}
-  const file=new File([blob],name,{type:"application/pdf"});
-  if(navigator.canShare&&navigator.canShare({files:[file]})){
-    try{await navigator.share({files:[file]});toast("Gönderildi")}catch(e){if(e&&e.name!=="AbortError")toast("Paylaşılamadı.")}
-  }else{download(name,blob,"application/pdf");toast("PDF indirildi (bu cihaz doğrudan paylaşımı desteklemiyor)")}
+  shareBlob(blob,name,"application/pdf");
 }
 $("pdfBtn").addEventListener("click",()=>{if(finalOffer)sharePdf(finalOffer)});
 $("pvDl").addEventListener("click",async()=>{
