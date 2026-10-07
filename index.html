@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ORİMAK Fuar CRM</title>
-<meta name="theme-color" content="#1450A3">
+<meta name="theme-color" content="#16181B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -22,24 +22,24 @@ img{max-width:100%}
 
 /* Layout: mobile-first app shell — sticky header, pipeline strip, lead list, bottom sheet for add/edit; desktop gets a wider centered column */
 :root{
-  --bg:#EDF1F5; --surface:#FFFFFF; --surface-2:#F5F7FA; --ink:#0F1B26; --muted:#5A6A79; --line:#D3DBE3;
-  --accent:#1450A3; --accent-ink:#FFFFFF; --kraft:#B9823A; --kraft-soft:#F3E6D2;
-  --s-new:#5A6A79; --s-contact:#1F6FD1; --s-offer:#8A5CD0; --s-visit:#B9823A; --s-won:#1E8A56; --s-lost:#B23B3B;
-  --danger:#B23B3B; --shadow:0 10px 30px rgba(15,27,38,.12);
+  --bg:#F2F3F4; --surface:#FFFFFF; --surface-2:#F6F7F8; --ink:#16181B; --muted:#62686F; --line:#DCDFE2;
+  --accent:#F08900; --accent-ink:#16181B; --kraft:#E07F00; --kraft-soft:#FFF1DE;
+  --s-new:#62686F; --s-contact:#1F6FD1; --s-offer:#8A5CD0; --s-visit:#E07F00; --s-won:#1E8A56; --s-lost:#C0392B;
+  --danger:#C0392B; --shadow:0 10px 30px rgba(22,24,27,.14);
   --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0B1219; --surface:#141F2A; --surface-2:#1A2733; --ink:#E5ECF2; --muted:#8C9DAD; --line:#243341;
-  --accent:#5B9BF0; --accent-ink:#06121F; --kraft:#D9A55C; --kraft-soft:#33291B;
-  --s-new:#8C9DAD; --s-contact:#5B9BF0; --s-offer:#B08CF0; --s-visit:#D9A55C; --s-won:#4CC48A; --s-lost:#E06A6A;
-  --danger:#E06A6A; --shadow:0 10px 30px rgba(0,0,0,.45); color-scheme:dark}}
+  --bg:#111315; --surface:#1A1D20; --surface-2:#22262A; --ink:#ECEEF0; --muted:#9AA1A8; --line:#2E3338;
+  --accent:#F59A1F; --accent-ink:#16181B; --kraft:#F59A1F; --kraft-soft:#3A2A14;
+  --s-new:#9AA1A8; --s-contact:#5B9BF0; --s-offer:#B08CF0; --s-visit:#F59A1F; --s-won:#4CC48A; --s-lost:#E06A6A;
+  --danger:#E06A6A; --shadow:0 10px 30px rgba(0,0,0,.5); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0B1219; --surface:#141F2A; --surface-2:#1A2733; --ink:#E5ECF2; --muted:#8C9DAD; --line:#243341;
-  --accent:#5B9BF0; --accent-ink:#06121F; --kraft:#D9A55C; --kraft-soft:#33291B;
-  --s-new:#8C9DAD; --s-contact:#5B9BF0; --s-offer:#B08CF0; --s-visit:#D9A55C; --s-won:#4CC48A; --s-lost:#E06A6A;
-  --danger:#E06A6A; --shadow:0 10px 30px rgba(0,0,0,.45); color-scheme:dark}
+  --bg:#111315; --surface:#1A1D20; --surface-2:#22262A; --ink:#ECEEF0; --muted:#9AA1A8; --line:#2E3338;
+  --accent:#F59A1F; --accent-ink:#16181B; --kraft:#F59A1F; --kraft-soft:#3A2A14;
+  --s-new:#9AA1A8; --s-contact:#5B9BF0; --s-offer:#B08CF0; --s-visit:#F59A1F; --s-won:#4CC48A; --s-lost:#E06A6A;
+  --danger:#E06A6A; --shadow:0 10px 30px rgba(0,0,0,.5); color-scheme:dark}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -54,7 +54,12 @@ button{cursor:pointer}
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:14px 10px;margin-inline:-16px;padding-inline:16px;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:12px;justify-content:space-between}
 .brand h1{white-space:nowrap;font-family:var(--f-display);font-weight:700;font-size:clamp(22px,7.2vw,28px);line-height:1;margin:0;letter-spacing:.01em;text-wrap:balance}
-.brand h1 span{color:var(--kraft)}
+.brand h1{display:flex;align-items:center;gap:10px}
+.brand h1 .lg{height:clamp(24px,7vw,30px);width:auto;display:block}
+.brand h1 span{color:var(--ink);font-size:clamp(17px,5vw,22px);letter-spacing:.04em;padding-left:10px;border-left:2px solid var(--accent);line-height:1}
+.lg-d{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lg-l{display:none!important}:root:not([data-theme="light"]) .lg-d{display:block!important}}
+:root[data-theme="dark"] .lg-l{display:none!important}:root[data-theme="dark"] .lg-d{display:block!important}
 .sync{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
 .dot.on{background:var(--s-won);box-shadow:0 0 0 0 var(--s-won);animation:ping 2.4s infinite}
@@ -162,11 +167,11 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .banner{margin-top:12px;font-size:13px;padding:10px 12px;border-radius:12px;background:var(--kraft-soft);border:1px solid color-mix(in srgb,var(--kraft) 40%,transparent)}
 
 /* offer */
-.offer-cta{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:16px;padding:14px;margin-bottom:14px;text-align:left;color:#fff;background:linear-gradient(120deg,var(--accent),color-mix(in srgb,var(--accent) 70%,var(--kraft)));box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 30%,transparent);position:relative;overflow:hidden}
+.offer-cta{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:16px;padding:14px;margin-bottom:14px;text-align:left;color:var(--accent-ink);background:linear-gradient(120deg,var(--accent),color-mix(in srgb,var(--accent) 75%,#ffd27a));box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 30%,transparent);position:relative;overflow:hidden}
 .offer-cta::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);transform:translateX(-100%);animation:shine 3.2s ease-in-out infinite}
 @keyframes shine{60%,100%{transform:translateX(100%)}}
-.offer-cta .ico{flex:0 0 44px;height:44px;border-radius:12px;background:rgba(255,255,255,.18);display:grid;place-items:center}
-.offer-cta svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2}
+.offer-cta .ico{flex:0 0 44px;height:44px;border-radius:12px;background:rgba(22,24,27,.12);display:grid;place-items:center}
+.offer-cta svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2}
 .offer-cta b{display:block;font-size:16px}.offer-cta small{opacity:.85;font-size:12px}
 .sheet.stack{z-index:55}
 .mcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
@@ -178,24 +183,43 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .opt{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface-2);min-height:48px;cursor:pointer}
 .opt input{width:22px;height:22px;accent-color:var(--accent);flex:0 0 auto}
 .opt span{flex:1;min-width:0}
+.f label.opt{text-transform:none;letter-spacing:0;font-size:15px;font-weight:500;color:var(--ink)}
 .opt em{font-style:normal;font-family:var(--f-mono);font-size:13px;color:var(--muted);white-space:nowrap}
 .opt:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,var(--surface))}
-.sum{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px;border-radius:14px;background:var(--ink);color:var(--bg);margin-top:4px}
+.sum{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 16px;border-radius:14px;background:#16181B;color:#fff;margin-top:4px;border-left:5px solid var(--accent)}
 .sum b{font-family:var(--f-display);font-size:28px;font-variant-numeric:tabular-nums}
 .sum small{opacity:.75;font-size:12px}
 .pvwrap{margin-top:14px}
 .pv{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;position:relative}
 .pv>div{transform-origin:0 0;position:absolute;left:0;top:0}
 .steps{display:flex;flex-direction:column;gap:8px;width:100%}
-.btn.wa{background:#1E8A56;border-color:#1E8A56;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px}
+.btn.wa-old{background:#1E8A56;border-color:#1E8A56;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px}
 .btn.wa svg,.btn.pdf svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
-.btn.pdf{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;background:var(--surface);color:var(--ink)}
+.btn.pdf-old{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;background:var(--surface);color:var(--ink)}
 .btn i.n{font-style:normal;font-family:var(--f-mono);font-size:12px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22)}
 .btn.pdf i.n{background:var(--surface-2);border:1px solid var(--line)}
 .btn.done{opacity:.75}
 .offers{margin-top:10px;display:flex;flex-direction:column;gap:6px}
 .offers a{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);font-size:14px;background:var(--surface-2)}
 .offers a em{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.grp{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.grp>summary{list-style:none;cursor:pointer;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:52px;font-weight:600}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-left:auto;transition:transform .2s;flex:0 0 auto}
+.grp[open]>summary::after{transform:rotate(-135deg)}
+.grp>summary small{font-weight:400;color:var(--muted);font-size:12px;text-align:right}
+.grp>.form{padding:0 14px 14px}
+.pvh{display:flex;justify-content:space-between;align-items:center}
+.btn.send{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;font-size:16px;background:#1E8A56;border-color:#1E8A56;color:#fff}
+.btn.send svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
+.btn.send.sent{background:var(--surface-2);border-color:var(--line);color:var(--muted);min-height:44px;font-size:14px}
+.btn.send:disabled{opacity:.6}
+.step2{display:flex;flex-direction:column;gap:8px;animation:rise .3s both}
+.s2txt{font-size:13px;color:var(--muted);line-height:1.4}.s2txt b{color:var(--ink)}
+.pulse{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,138,86,.5)}70%{box-shadow:0 0 0 12px rgba(30,138,86,0)}100%{box-shadow:0 0 0 0 rgba(30,138,86,0)}}
+.seg.tabs{display:grid;grid-template-columns:1fr 1fr}
+.seg.tabs button{text-align:center;font-weight:600}
 /* catalog editor */
 .cm{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;background:var(--surface-2)}
 .cm .row{display:grid;grid-template-columns:1fr 130px;gap:8px}
@@ -261,7 +285,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <h1>ORİMAK <span>Fuar</span> CRM</h1>
+      <h1 aria-label="ORİMAK Fuar CRM"><img class="lg lg-l" src="data:image/png;base64,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" alt=""><img class="lg lg-d" src="data:image/png;base64,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" alt=""><span>Fuar CRM</span></h1>
       <div class="sync" id="sync"><span class="dot" id="syncDot"></span><span id="syncTxt">Bağlanıyor…</span></div>
     </div>
     <div class="searchrow">
@@ -272,8 +296,8 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
       <button class="iconbtn" id="exportBtn" type="button" aria-label="CSV olarak dışa aktar">
         <svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span class="lbl1">CSV</span>
       </button>
-      <button class="iconbtn" id="catBtn" type="button" aria-label="Teklif kataloğu" title="Teklif kataloğu">
-        <svg viewBox="0 0 24 24"><path d="M4 5h7v14H4zM13 5h7v6h-7zM13 13h7v6h-7z"/></svg><span class="lbl2">Katalog</span>
+      <button class="iconbtn" id="catBtn" type="button" aria-label="Teklif ayarları" title="Teklif ayarları">
+        <svg viewBox="0 0 24 24"><path d="M4 5h7v14H4zM13 5h7v6h-7zM13 13h7v6h-7z"/></svg><span class="lbl2">Teklif</span>
       </button>
       <button class="iconbtn" id="backupBtn" type="button" aria-label="JSON yedek indir" title="JSON yedek">
         <svg viewBox="0 0 24 24"><path d="M4 7h16v12H4zM8 7V4h8v3M9 13h6"/></svg><span class="lbl2">Yedek</span>
@@ -343,35 +367,81 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
       <div class="f full"><span class="lbl">Teklif dili</span><div class="seg" id="o_lang"></div></div>
       <div class="f full"><span class="lbl">Makine</span><div class="mcards" id="o_machines"></div></div>
       <div class="f full" id="o_optWrap"><span class="lbl">Seçenekler ve hizmetler</span><div class="optlist" id="o_opts"></div></div>
-      <div class="f"><label for="o_price">Makine fiyatı</label><input id="o_price" inputmode="decimal" placeholder="Boş bırakılırsa fiyatsız teklif"></div>
+      <div class="f"><label for="o_price">Makine fiyatı</label><input id="o_price" inputmode="decimal" placeholder="Boş = fiyatsız teklif"></div>
       <div class="f"><label for="o_cur">Para birimi</label><select id="o_cur"><option>EUR</option><option>USD</option><option>TRY</option></select></div>
       <div class="f"><label for="o_disc">İndirim (tutar)</label><input id="o_disc" inputmode="decimal" placeholder="0"></div>
-      <div class="f"><label for="o_valid">Geçerlilik (gün)</label><input id="o_valid" inputmode="numeric" value="30"></div>
-      <div class="f"><label for="o_delivery">Teslim süresi</label><input id="o_delivery" placeholder="Örn. 8–10 hafta / 8–10 weeks"></div>
-      <div class="f"><label for="o_payment">Ödeme</label><input id="o_payment" placeholder="Örn. %30 peşin, %70 sevkte"></div>
-      <div class="f full"><label for="o_note">Not</label><textarea id="o_note" placeholder="Müşteriye özel not (isteğe bağlı)"></textarea></div>
-      <div class="f"><label for="o_phone">WhatsApp numarası</label><input id="o_phone" type="tel" inputmode="tel" placeholder="+971 50 …"></div>
-      <div class="f"><label for="o_byPhone">Sizin telefonunuz (PDF'te)</label><input id="o_byPhone" type="tel" inputmode="tel" placeholder="+90 5…"></div>
+      <div class="f"><label for="o_valid">Geçerlilik (gün)</label><input id="o_valid" inputmode="numeric"></div>
       <div class="f full"><div class="sum"><div><small id="sumLbl">Toplam</small><br><b id="sumVal">—</b></div><small id="sumNote"></small></div></div>
     </div>
-    <div class="pvwrap"><span class="lbl">PDF önizleme</span><div class="pv" id="pv"></div></div>
+    <details class="grp" id="grpTerms">
+      <summary><span>Ticari koşullar</span><small>Standart metinlerden dolu gelir</small></summary>
+      <div class="form">
+        <div class="f"><label for="o_delivery">Teslim süresi</label><input id="o_delivery"></div>
+        <div class="f"><label for="o_incoterm">Teslim şekli</label><input id="o_incoterm" placeholder="Örn. EXW İnegöl / FOB İstanbul"></div>
+        <div class="f"><label for="o_payment">Ödeme</label><input id="o_payment"></div>
+        <div class="f"><label for="o_warranty">Garanti</label><input id="o_warranty"></div>
+        <div class="f full"><label for="o_intro">Giriş metni</label><textarea id="o_intro"></textarea></div>
+        <div class="f full"><label for="o_terms">Genel şartlar (her satır bir madde)</label><textarea id="o_terms" style="min-height:120px"></textarea></div>
+        <div class="f full"><label for="o_closing">Kapanış metni</label><textarea id="o_closing"></textarea></div>
+        <div class="f full"><label for="o_note">Bu teklife özel not</label><textarea id="o_note" placeholder="İsteğe bağlı"></textarea></div>
+      </div>
+    </details>
+    <details class="grp" id="grpBy">
+      <summary><span>Hazırlayan bilgileri</span><small id="bySum">PDF'teki imza alanı</small></summary>
+      <div class="form">
+        <div class="f"><label for="o_by">Ad Soyad</label><input id="o_by"></div>
+        <div class="f"><label for="o_byTitle">Unvan</label><input id="o_byTitle" placeholder="Örn. Satış Müdürü"></div>
+        <div class="f"><label for="o_byPhone">Telefon</label><input id="o_byPhone" type="tel" inputmode="tel"></div>
+        <div class="f"><label for="o_byEmail">E-posta</label><input id="o_byEmail" type="email" inputmode="email"></div>
+      </div>
+    </details>
+    <div class="form" style="margin-top:14px"><div class="f full"><label for="o_phone">Müşterinin WhatsApp numarası</label><input id="o_phone" type="tel" inputmode="tel" placeholder="+971 50 …"></div></div>
+    <div class="pvwrap"><div class="pvh"><span class="lbl">PDF önizleme</span><button class="ghost" id="pvDl" type="button">PDF indir</button></div><div class="pv" id="pv"></div></div>
   </div>
   <div class="sheet-foot">
-    <div class="steps">
-      <button class="btn wa" id="waBtn" type="button"><i class="n">1</i><svg viewBox="0 0 24 24"><path d="M3 21l1.6-4.6A9 9 0 1 1 8 20.2z"/></svg>WhatsApp'ta gönder</button>
-      <button class="btn pdf" id="pdfBtn" type="button"><i class="n">2</i><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M12 11v6M9 14l3 3 3-3"/></svg><span id="pdfLbl">PDF'i paylaş</span></button>
+    <div class="steps" id="sendSteps">
+      <button class="btn send" id="sendBtn" type="button"><svg viewBox="0 0 24 24"><path d="M3 21l1.6-4.6A9 9 0 1 1 8 20.2z"/></svg><span id="sendLbl">Teklifi WhatsApp'tan gönder</span></button>
+      <div class="step2" id="step2" hidden>
+        <div class="s2txt"><b>Son adım</b> WhatsApp'ta sohbet açıldı. Şimdi PDF'i gönderin ve listede <b id="s2name">müşterinin</b> sohbetini seçin.</div>
+        <button class="btn send pulse" id="pdfBtn" type="button"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 14l3 3 3-3M12 10v7"/></svg><span id="pdfLbl">PDF'i sohbete gönder</span></button>
+      </div>
     </div>
   </div>
 </section>
 <section class="sheet stack" id="catSheet" role="dialog" aria-modal="true" aria-labelledby="catTitle">
   <div class="grab"></div>
-  <div class="sheet-h"><h3 id="catTitle">Teklif kataloğu</h3><button class="ghost" id="catClose" type="button">Kapat</button></div>
+  <div class="sheet-h"><h3 id="catTitle">Teklif ayarları</h3><button class="ghost" id="catClose" type="button">Kapat</button></div>
   <div class="sheet-body">
-    <p class="meta" style="margin-top:0">Makineler, teknik özellikler, seçenekler ve fiyatlar. Tüm ekip aynı kataloğu kullanır. Özellikleri her satıra bir tane yazın.</p>
-    <div id="catList"></div>
-    <button class="btn" id="catAdd" type="button" style="width:100%">+ Makine ekle</button>
+    <div class="seg tabs" id="catTabs"><button type="button" data-v="std" aria-pressed="true">Standart metinler</button><button type="button" data-v="cat" aria-pressed="false">Makine kataloğu</button></div>
+    <div id="stdPane">
+      <p class="meta" style="margin-top:12px">Her yeni teklif bu metinlerle dolu gelir; teklif ekranında o teklife özel değiştirebilirsiniz.</p>
+      <div class="lbl" style="margin-top:6px">Firma bilgileri (PDF'te)</div>
+      <div class="form" style="margin-top:6px">
+        <div class="f"><label for="sc_name">Firma adı</label><input id="sc_name"></div>
+        <div class="f"><label for="sc_address">Adres</label><input id="sc_address"></div>
+        <div class="f"><label for="sc_phone">Telefon</label><input id="sc_phone" type="tel"></div>
+        <div class="f"><label for="sc_email">E-posta</label><input id="sc_email" type="email"></div>
+        <div class="f"><label for="sc_web">Web</label><input id="sc_web"></div>
+        <div class="f"><label for="sc_valid">Varsayılan geçerlilik (gün)</label><input id="sc_valid" inputmode="numeric"></div>
+      </div>
+      <div class="seg" id="stdLang" style="margin-top:16px"><button type="button" data-v="tr" aria-pressed="true">Türkçe metinler</button><button type="button" data-v="en" aria-pressed="false">English texts</button></div>
+      <div class="form" style="margin-top:10px">
+        <div class="f"><label for="ss_delivery">Teslim süresi</label><input id="ss_delivery" placeholder="Örn. Sipariş onayından itibaren 8–10 hafta"></div>
+        <div class="f"><label for="ss_incoterm">Teslim şekli</label><input id="ss_incoterm" placeholder="Örn. EXW İnegöl"></div>
+        <div class="f"><label for="ss_payment">Ödeme</label><input id="ss_payment" placeholder="Örn. %30 peşin, %70 sevkiyat öncesi"></div>
+        <div class="f"><label for="ss_warranty">Garanti</label><input id="ss_warranty" placeholder="Örn. 12 ay"></div>
+        <div class="f full"><label for="ss_intro">Giriş metni</label><textarea id="ss_intro"></textarea></div>
+        <div class="f full"><label for="ss_terms">Genel şartlar (her satır bir madde)</label><textarea id="ss_terms" style="min-height:120px"></textarea></div>
+        <div class="f full"><label for="ss_closing">Kapanış metni</label><textarea id="ss_closing"></textarea></div>
+      </div>
+    </div>
+    <div id="catPane" hidden>
+      <p class="meta" style="margin-top:12px">Makineler, teknik özellikler, seçenekler ve fiyatlar. Özellikleri her satıra bir tane, "Başlık: değer" şeklinde yazın; PDF'te tablo olarak çıkar.</p>
+      <div id="catList"></div>
+      <button class="btn" id="catAdd" type="button" style="width:100%">+ Makine ekle</button>
+    </div>
   </div>
-  <div class="sheet-foot"><button class="btn primary" id="catSave" type="button">Kataloğu kaydet</button></div>
+  <div class="sheet-foot"><button class="btn primary" id="catSave" type="button">Ayarları kaydet</button></div>
 </section>
 <div class="toast" id="toast" role="status"></div>
 <div class="hint" id="installHint" hidden><b>Uygulama olarak kurun</b>Safari'de <svg viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4M5 12v8h14v-8"/></svg> Paylaş'a, ardından <b style="display:inline">Ana Ekrana Ekle</b>'ye dokunun.<button id="hintClose" type="button" aria-label="Kapat">×</button></div>
@@ -583,8 +653,8 @@ function renderLog(){
   if(!editing)return;
   const log=(editing.log||[]).slice().sort((a,b)=>b.at-a.at);
   $("logList").innerHTML=log.length?log.map(x=>`<div class="ev"><time>${fmtTime(x.at)}${x.by?" · "+esc(x.by):""}</time><p>${esc(x.text)}</p></div>`).join(""):`<div class="due">Henüz not yok.</div>`;
-  const offs=(editing.offers||[]).slice().sort((a,b)=>b.at-a.at);
-  $("offerList").innerHTML=offs.map(o=>`<a href="${esc(offerLink(o.id))}" target="_blank" rel="noopener"><span>📄 ${esc(o.no)} · ${esc(o.machine)}</span><em>${o.total?esc(o.total):fmtTime(o.at)}</em></a>`).join("");
+  const offs=(editing.offers||[]).map((o,i)=>[o,i]).sort((a,b)=>b[0].at-a[0].at);
+  $("offerList").innerHTML=offs.length?`<span class="lbl" style="margin-top:6px">Gönderilen teklifler</span>`+offs.map(([o,i])=>`<a href="#" data-oi="${i}" onclick="return false"><span>📄 ${esc(o.no)} · ${esc(o.machine&&o.machine.name||o.machine||"")}</span><em>${esc(o.totalTxt||o.total||fmtTime(o.at))}</em></a>`).join(""):"";
   $("metaLine").textContent=[editing.createdAt?"Kayıt: "+fmtTime(editing.createdAt):"",editing.by?"Kaydeden: "+editing.by:"",editing.updatedAt?"Son güncelleme: "+fmtTime(editing.updatedAt):""].filter(Boolean).join(" · ");
 }
 function collect(){
@@ -691,9 +761,17 @@ $("scanFile").addEventListener("change",async e=>{
   try{
     const T=await loadTesseract();
     const worker=await T.createWorker(["eng","tur"],1,{logger:m=>{if(m.status==="recognizing text")$("scanSub").textContent=`Okunuyor… %${Math.round(m.progress*100)}`;else if(/loading/.test(m.status))$("scanSub").textContent="Dil paketi yükleniyor (ilk seferde biraz sürer)…"}});
-    const {data}=await worker.recognize(toCanvas(img,2200,true));
+    const {data}=await worker.recognize(toCanvas(img,2200,true),{},{text:true,blocks:true});
     await worker.terminate();
-    const r=parseCard(data.text||"");
+    // Okuma aracının emin olmadığı satırları at (bulanık fotoğrafta anlamsız metin oluşur)
+    const lines=Array.isArray(data.lines)&&data.lines.length?data.lines:(data.blocks||[]).flatMap(b=>(b.paragraphs||[]).flatMap(p=>p.lines||[]));
+    const good=lines.length?lines.filter(l=>l.confidence>=65).map(l=>l.text).join("\n"):(data.text||"");
+    const strong=lines.filter(l=>l.confidence>=78).map(l=>l.text).join("\n").toLocaleLowerCase("tr");
+    // e-posta/telefon/web kalıpla doğrulandığı için tüm metinden; isim/firma/ünvan yalnızca güvenilir satırlardan
+    const rAll=parseCard(data.text||""), rGood=parseCard(good);
+    const r=Object.assign({},rAll,{name:rGood.name,company:rGood.company,title:rGood.title,address:rGood.address});
+    if(r.name&&lines.length&&!strong.includes(r.name.toLocaleLowerCase("tr").split(" ")[0])){r.name=""}
+    const avgConf=lines.length?lines.reduce((a,l)=>a+l.confidence,0)/lines.length:100;
     const isNew=!editing;let n=0;
     const fill=(id,val)=>{if(!val)return;const el=$(id);if(isNew||!el.value.trim()){el.value=val;n++;el.classList.remove("filled");void el.offsetWidth;el.classList.add("filled")}};
     fill("f_name",r.name);fill("f_company",r.company);fill("f_country",r.country);fill("f_phone",r.phone);fill("f_email",r.email);
@@ -701,7 +779,7 @@ $("scanFile").addEventListener("change",async e=>{
     if(extra&&!$("f_desc").value.includes(extra)){$("f_desc").value=($("f_desc").value.trim()?$("f_desc").value.trim()+"\n":"")+extra;$("f_desc").classList.add("filled")}
     if(r.name&&isNew)$("sheetTitle").textContent=r.name;
     pendingCard=thumb;
-    showCardImg(thumb,n?"Bilgiler karttan dolduruldu. Kontrol edip Kaydet'e basın.":"Karttan net bilgi çıkarılamadı; fotoğraf kayda eklendi, bilgileri elle girin.");
+    showCardImg(thumb,!n?"Karttan net bilgi çıkarılamadı; fotoğraf kayda eklendi, bilgileri elle girin.":avgConf<70?"Fotoğraf biraz bulanık; doldurulan alanları kontrol edin. Daha iyi sonuç için kartı düz ve yakından çekin.":"Bilgiler karttan dolduruldu. Kontrol edip Kaydet'e basın.");
     toast(n?"Kartvizit okundu":"Kart okunamadı");
   }catch(err){
     console.error(err);pendingCard=thumb;
@@ -742,22 +820,26 @@ if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.service
 
 /* ================= TEKLİF ================= */
 const SEED_CAT={currency:"EUR",machines:[
-  {id:"qbox",name:"Q-BOX",price:"",specs:{tr:["Kesim süresi: 8 saniye","Kapasite: dakikada 5–14 kutu","80 FEFCO kutu tipi","Makine ağırlığı: 2.240 kg"],en:["Cutting time: 8 seconds","Capacity: 5–14 boxes per minute","80 FEFCO box styles","Machine weight: 2,240 kg"]},
-   options:[]},
-  {id:"bc410",name:"BC410 pro",price:"",specs:{tr:["Sıcak tutkal (hot-melt) ile kutu kapatma","60 kg'a kadar kutular","Kutu uzunluğu: 300–3000 mm","Güç: 25 kW"],en:["Hot-melt box closing","Boxes up to 60 kg","Box length: 300–3000 mm","Power: 25 kW"]},options:[]},
-  {id:"line",name:"ORİTEQ Entegre Hat",price:"",specs:{tr:["Q-BOX kesim + BC410 pro kapatma","Uçtan uca otomatik kutu üretim ve paketleme hattı"],en:["Q-BOX cutting + BC410 pro closing","End-to-end automated box making and packing line"]},options:[]}
+  {id:"qbox",name:"Q-BOX",price:"",specs:{tr:["Kesim süresi: 8 saniye","Kapasite: dakikada 5–14 kutu","Kutu tipi: 80 FEFCO tipi","Makine ağırlığı: 2.240 kg"],en:["Cutting time: 8 seconds","Capacity: 5–14 boxes per minute","Box styles: 80 FEFCO styles","Machine weight: 2,240 kg"]},options:[]},
+  {id:"bc410",name:"BC410 pro",price:"",specs:{tr:["Kapatma yöntemi: Sıcak tutkal (hot-melt)","Kutu ağırlığı: 60 kg'a kadar","Kutu uzunluğu: 300–3000 mm","Güç: 25 kW"],en:["Closing method: Hot-melt","Box weight: up to 60 kg","Box length: 300–3000 mm","Power: 25 kW"]},options:[]},
+  {id:"line",name:"ORİTEQ Entegre Hat",price:"",specs:{tr:["Kapsam: Q-BOX kesim + BC410 pro kapatma","Uçtan uca otomatik kutu üretim ve paketleme hattı"],en:["Scope: Q-BOX cutting + BC410 pro closing","End-to-end automated box making and packing line"]},options:[]}
 ]};
 const GENERIC_OPTS=[["Kurulum ve devreye alma","Installation and commissioning"],["Operatör eğitimi","Operator training"],["Yedek parça seti","Spare parts kit"],["Uzatılmış garanti (+1 yıl)","Extended warranty (+1 year)"],["Nakliye","Shipping"]];
 SEED_CAT.machines.forEach(m=>m.options=GENERIC_OPTS.map((o,i)=>({id:m.id+"_o"+i,tr:o[0],en:o[1],price:""})));
-let catalog=JSON.parse(JSON.stringify(SEED_CAT)), catFromServer=false;
+let catalog=normCat(SEED_CAT), catFromServer=false;
+function normStd(x){
+  const D=Teklif.STD; x=x&&typeof x==="object"?x:{};
+  const out={company:Object.assign({},D.company,x.company||{}),validityDays:x.validityDays??D.validityDays};
+  ["tr","en"].forEach(l=>{out[l]=Object.assign({},D[l],x[l]||{})});
+  return out;
+}
 function normCat(c){
   c=c&&typeof c==="object"?JSON.parse(JSON.stringify(c)):JSON.parse(JSON.stringify(SEED_CAT));
   c.currency=c.currency||"EUR";c.machines=Array.isArray(c.machines)?c.machines:[];
   c.machines.forEach((m,i)=>{m.id=m.id||"m"+i+Date.now().toString(36);m.name=m.name||"";m.price=m.price??"";m.specs=m.specs||{tr:[],en:[]};m.specs.tr=m.specs.tr||[];m.specs.en=m.specs.en||[];m.options=Array.isArray(m.options)?m.options:[]});
+  c.std=normStd(c.std);
   return c;
 }
-const pageBase=()=>location.href.replace(/[#?].*$/,"").replace(/[^/]*$/,"");
-function offerLink(id){return id?pageBase()+"teklif.html?id="+encodeURIComponent(id):"#"}
 function waNumber(p){
   let d=String(p||"").trim();const plus=d.startsWith("+")||d.startsWith("00");d=d.replace(/\D/g,"");
   if(d.startsWith("00"))d=d.slice(2);
@@ -765,59 +847,66 @@ function waNumber(p){
   if(!plus&&d.length===10&&d.startsWith("5"))d="90"+d;
   return d;
 }
-let od=null, offerLead=null, finalOffer=null, pdfCache={key:"",blob:null,busy:null};
-function newDraft(lead){
-  const m=catalog.machines.find(x=>(lead.models||[]).includes(x.name))||catalog.machines[0]||null;
-  const eng=lead.country&&lead.country!=="Türkiye";
-  return {lang:eng?"en":"tr",machineId:m?m.id:"",opts:[],price:m?m.price:"",currency:catalog.currency||"EUR",discount:"",validityDays:"30",delivery:"",payment:"",note:"",
-    phone:lead.phone||"",byPhone:lsGet(LS+"_byPhone","")};
-}
-function curMachine(){return catalog.machines.find(m=>m.id===od.machineId)||null}
 function countryIn(name,lang){
   if(!name||lang!=="en")return name||"";
   const c=COUNTRIES.find(x=>x[0].toLocaleLowerCase("tr")===name.trim().toLocaleLowerCase("tr"));
   if(!c)return name;
   try{return new Intl.DisplayNames(["en"],{type:"region"}).of(c[1])||name}catch(e){return name}
 }
+const STD_KEYS=["delivery","incoterm","payment","warranty","intro","terms","closing"];
+const OFIELDS={price:"o_price",discount:"o_disc",validityDays:"o_valid",delivery:"o_delivery",incoterm:"o_incoterm",payment:"o_payment",warranty:"o_warranty",intro:"o_intro",terms:"o_terms",closing:"o_closing",note:"o_note",phone:"o_phone",by:"o_by",byTitle:"o_byTitle",byPhone:"o_byPhone",byEmail:"o_byEmail"};
+let od=null, offerLead=null, finalOffer=null, pdfCache={key:"",blob:null,busy:null};
+function applyStd(lang){const s=catalog.std[lang]||{};STD_KEYS.forEach(k=>od[k]=s[k]||"")}
+function newDraft(lead){
+  const m=catalog.machines.find(x=>(lead.models||[]).includes(x.name))||catalog.machines[0]||null;
+  const lang=lead.country&&lead.country!=="Türkiye"?"en":"tr";
+  od={lang,machineId:m?m.id:"",opts:[],price:m?m.price:"",currency:catalog.currency||"EUR",discount:"",validityDays:catalog.std.validityDays||"30",note:"",
+    phone:lead.phone||"",by:$("f_by").value.trim()||lsGet(LS+"_by",""),byTitle:lsGet(LS+"_byTitle",""),byPhone:lsGet(LS+"_byPhone",""),byEmail:lsGet(LS+"_byEmail","")};
+  applyStd(lang);
+}
+function curMachine(){return catalog.machines.find(m=>m.id===od.machineId)||null}
 function buildOffer(){
   const m=curMachine();const L=od.lang;
-  return {lang:L,createdAt:Date.now(),leadId:offerLead.id||"",
+  const o={lang:L,createdAt:Date.now(),leadId:offerLead.id||"",
     customer:{name:offerLead.name||"",company:offerLead.company||"",country:countryIn(offerLead.country,L),phone:od.phone,email:offerLead.email||""},
     machine:{id:m?m.id:"",name:m?m.name:"",price:od.price,specs:m?(m.specs[L]&&m.specs[L].length?m.specs[L]:m.specs.tr):[]},
-    options:m?m.options.filter(o=>od.opts.includes(o.id)).map(o=>({name:(L==="en"?o.en||o.tr:o.tr||o.en),price:o.price})):[],
-    currency:od.currency,discount:od.discount,validityDays:od.validityDays,delivery:od.delivery,payment:od.payment,note:od.note,
-    by:$("f_by").value.trim()||lsGet(LS+"_by",""),byPhone:od.byPhone};
+    options:m?m.options.filter(x=>od.opts.includes(x.id)).map(x=>({name:(L==="en"?x.en||x.tr:x.tr||x.en),price:x.price})):[],
+    currency:od.currency,discount:od.discount,validityDays:od.validityDays,company:catalog.std.company};
+  ["delivery","incoterm","payment","warranty","intro","terms","closing","note","by","byTitle","byPhone","byEmail"].forEach(k=>o[k]=od[k]||"");
+  return o;
 }
 function renderOffer(){
   if(!od)return;
   $("o_lang").innerHTML=[["tr","Türkçe"],["en","English"]].map(l=>`<button type="button" data-v="${l[0]}" aria-pressed="${od.lang===l[0]}">${l[1]}</button>`).join("");
-  $("o_machines").innerHTML=catalog.machines.length?catalog.machines.map(m=>`<button class="mcard" type="button" data-v="${esc(m.id)}" aria-pressed="${od.machineId===m.id}"><b>${esc(m.name)}</b><small>${esc((m.specs[od.lang]||m.specs.tr||[])[0]||"")}</small></button>`).join(""):`<div class="due">Katalogda makine yok. Üstteki Katalog düğmesinden ekleyin.</div>`;
+  $("o_machines").innerHTML=catalog.machines.length?catalog.machines.map(m=>`<button class="mcard" type="button" data-v="${esc(m.id)}" aria-pressed="${od.machineId===m.id}"><b>${esc(m.name)}</b><small>${esc(((m.specs[od.lang]||m.specs.tr||[])[0]||"").replace(/^[^:]{1,40}:\s*/,""))}</small></button>`).join(""):`<div class="due">Katalogda makine yok. Üstteki ayarlar düğmesinden ekleyin.</div>`;
   const m=curMachine();
   $("o_optWrap").hidden=!m||!m.options.length;
-  $("o_opts").innerHTML=m?m.options.map(o=>`<label class="opt"><input type="checkbox" data-v="${esc(o.id)}" ${od.opts.includes(o.id)?"checked":""}><span>${esc(od.lang==="en"?o.en||o.tr:o.tr||o.en)}</span>${o.price!==""&&o.price!=null?`<em>${esc(Teklif.money(parseFloat(String(o.price).replace(",","."))||0,{lang:od.lang,currency:od.currency}))}</em>`:""}</label>`).join(""):"";
-  ["price","discount","validityDays","delivery","payment","note","phone","byPhone"].forEach(k=>{const id={price:"o_price",discount:"o_disc",validityDays:"o_valid",delivery:"o_delivery",payment:"o_payment",note:"o_note",phone:"o_phone",byPhone:"o_byPhone"}[k];if(document.activeElement!==$(id))$(id).value=od[k]??""});
+  $("o_opts").innerHTML=m?m.options.map(x=>`<label class="opt"><input type="checkbox" data-v="${esc(x.id)}" ${od.opts.includes(x.id)?"checked":""}><span>${esc(od.lang==="en"?x.en||x.tr:x.tr||x.en)}</span>${x.price!==""&&x.price!=null?`<em>${esc(Teklif.money(parseFloat(String(x.price).replace(",","."))||0,{lang:od.lang,currency:od.currency}))}</em>`:""}</label>`).join(""):"";
+  Object.entries(OFIELDS).forEach(([k,id])=>{if(document.activeElement!==$(id))$(id).value=od[k]??""});
   $("o_cur").value=od.currency;
+  $("bySum").textContent=[od.by,od.byTitle].filter(Boolean).join(" · ")||"PDF'teki imza alanı";
   updateSummary();
 }
 let pvTimer;
+function offerKey(o){return JSON.stringify(Object.assign({},o,{createdAt:0,no:"",id:""}))}
 function updateSummary(){
   const o=buildOffer();const t=Teklif.total(o);
-  $("sumLbl").textContent=t.discount?"Toplam (indirimli)":"Toplam";
+  $("sumLbl").textContent=t.discount?"Genel toplam (indirimli)":"Genel toplam";
   $("sumVal").textContent=t.hasPrice?Teklif.money(t.total,o):"Fiyatsız teklif";
   $("sumNote").textContent=o.machine.name?o.machine.name+(o.options.length?` + ${o.options.length} seçenek`:""):"";
-  clearTimeout(pvTimer);pvTimer=setTimeout(()=>renderPreview(o),120);
-  finalOffer=null;$("waBtn").classList.remove("done");
-  const key=JSON.stringify({...o,createdAt:0});if(pdfCache.key!==key){$("pdfLbl").textContent="PDF'i paylaş"}
+  clearTimeout(pvTimer);pvTimer=setTimeout(()=>renderPreview(o),150);
+  if(finalOffer&&offerKey(Object.assign({},finalOffer))!==offerKey(o))resetSend();
 }
 function renderPreview(o){
   const pv=$("pv");const w=pv.clientWidth||340;const k=w/794;
-  pv.innerHTML=`<div style="transform:scale(${k});width:794px">${Teklif.html(o)}</div>`;
-  const inner=pv.firstElementChild;pv.style.height=Math.ceil(Math.max(inner.firstElementChild.offsetHeight,1123)*k)+"px";
+  pv.innerHTML=`<div style="transform:scale(${k});width:794px">${Teklif.html(Object.assign({},o,{no:o.no||"TKL-……"}))}</div>`;
+  const inner=pv.firstElementChild.firstElementChild;pv.style.height=Math.ceil(inner.offsetHeight*k)+"px";
 }
-$("o_lang").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;od.lang=b.dataset.v;renderOffer()});
+function resetSend(){finalOffer=null;$("step2").hidden=true;$("sendBtn").classList.remove("sent");$("sendLbl").textContent="Teklifi WhatsApp'tan gönder"}
+$("o_lang").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.dataset.v===od.lang)return;od.lang=b.dataset.v;applyStd(od.lang);renderOffer()});
 $("o_machines").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;od.machineId=b.dataset.v;od.opts=[];const m=curMachine();od.price=m?m.price:"";renderOffer()});
 $("o_opts").addEventListener("change",e=>{const c=e.target.closest("input");if(!c)return;const v=c.dataset.v;od.opts=c.checked?[...od.opts,v]:od.opts.filter(x=>x!==v);updateSummary()});
-[["o_price","price"],["o_disc","discount"],["o_valid","validityDays"],["o_delivery","delivery"],["o_payment","payment"],["o_note","note"],["o_phone","phone"],["o_byPhone","byPhone"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{od[k]=e.target.value;if(k==="byPhone")lsSet(LS+"_byPhone",od.byPhone);updateSummary()}));
+Object.entries(OFIELDS).forEach(([k,id])=>$(id).addEventListener("input",e=>{od[k]=e.target.value;if(["by","byTitle","byPhone","byEmail"].includes(k)){lsSet(LS+"_"+k,od[k]);$("bySum").textContent=[od.by,od.byTitle].filter(Boolean).join(" · ")||"PDF'teki imza alanı"}updateSummary()}));
 $("o_cur").addEventListener("change",e=>{od.currency=e.target.value;renderOffer()});
 
 $("offerBtn").addEventListener("click",async()=>{
@@ -826,8 +915,9 @@ $("offerBtn").addEventListener("click",async()=>{
     const lead=collect();if(lead.by)lsSet(LS+"_by",lead.by);
     if(!(await persist(lead)))return;editing=JSON.parse(JSON.stringify(lead));$("delBtn").hidden=false;$("logBlock").hidden=false;renderLog();
   }else{editing=Object.assign(editing,collect())}
-  offerLead=editing;od=newDraft(offerLead);finalOffer=null;pdfCache={key:"",blob:null,busy:null};
+  offerLead=editing;newDraft(offerLead);pdfCache={key:"",blob:null,busy:null};resetSend();
   $("offerTitle").textContent="Teklif · "+(offerLead.name||"");
+  $("s2name").textContent=(offerLead.name||"müşterinin")+(offerLead.name?" adlı kişinin":"");
   $("offerSheet").classList.add("open");$("offerSheet").querySelector(".sheet-body").scrollTop=0;
   renderOffer();
 });
@@ -838,57 +928,87 @@ function finalize(){
   const o=buildOffer();
   const d=new Date();o.no="TKL-"+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+"-"+Math.random().toString(36).slice(2,6).toUpperCase();
   let id="";
-  if(mode==="db"){const ref=fb.F.doc(fb.F.collection(fb.db,"fuar_teklif"));id=ref.id;fb.F.setDoc(ref,o).catch(e=>toast(e&&e.code==="permission-denied"?"Teklif kaydedilemedi: Firebase izni yok.":"Teklif sunucuya gönderilemedi."))}
-  else{const all=lsGet(LS+"_offers",[]);id="L"+Date.now().toString(36);all.push(Object.assign({id},o));lsSet(LS+"_offers",all)}
+  if(mode==="db"){const ref=fb.F.doc(fb.F.collection(fb.db,"fuar_teklif"));id=ref.id;fb.F.setDoc(ref,o).catch(e=>toast(e&&e.code==="permission-denied"?"Teklif arşive kaydedilemedi: Firebase izni yok.":"Teklif arşive gönderilemedi."))}
   o.id=id;finalOffer=o;
-  // müşteri kaydına işle
   const t=Teklif.total(o);const totalTxt=t.hasPrice?Teklif.money(t.total,o):"";
   const lead=Object.assign({},offerLead);
-  lead.offers=[...(lead.offers||[]),{id:mode==="db"?id:"",no:o.no,at:o.createdAt,machine:o.machine.name,total:totalTxt}];
+  lead.offers=[...(lead.offers||[]),Object.assign({at:o.createdAt,totalTxt},o)];
   lead.log=[...(lead.log||[]),{at:Date.now(),text:`Teklif gönderildi: ${o.no} · ${o.machine.name}${o.options.length?" + "+o.options.map(x=>x.name).join(", "):""}${totalTxt?" · "+totalTxt:""}`,by:o.by}];
   if(["new","contact"].includes(lead.status||"new"))lead.status="offer";
   if(!lead.followUp||lead.followUp<todayISO())lead.followUp=addDays(3);
+  if(!lead.phone&&od.phone)lead.phone=od.phone;
   lead.updatedAt=Date.now();
   persist(lead).then(()=>{offerLead=lead;if(editing&&editing.id===lead.id){editing=JSON.parse(JSON.stringify(lead));selStatus=lead.status;segRender();$("f_follow").value=lead.followUp;renderLog()}});
   return o;
 }
-$("waBtn").addEventListener("click",()=>{
-  const m=curMachine();if(!m){toast("Önce makine seçin.");return}
-  const num=waNumber(od.phone);
-  if(num.length<8){$("o_phone").focus();toast("Geçerli bir WhatsApp numarası girin (ülke koduyla).");return}
-  const o=finalize();
-  const link=mode==="db"&&o.id?offerLink(o.id):"";
-  const url="https://wa.me/"+num+"?text="+encodeURIComponent(Teklif.message(o,link));
-  const w=window.open(url,"_blank");if(!w)location.href=url;
-  $("waBtn").classList.add("done");
-  if(!offerLead.phone&&od.phone){/* numarayı kayda da yaz */}
-  makePdf().catch(()=>{});
-});
-function makePdf(){
-  const o=finalOffer||buildOffer();const key=JSON.stringify({...o,createdAt:0,no:"",id:""});
+function makePdf(o){
+  const key=offerKey(o);
   if(pdfCache.key===key&&pdfCache.blob)return Promise.resolve(pdfCache.blob);
   if(pdfCache.key===key&&pdfCache.busy)return pdfCache.busy;
-  $("pdfLbl").textContent="PDF hazırlanıyor…";
-  pdfCache={key,blob:null,busy:Teklif.pdf(o).then(b=>{pdfCache.blob=b;pdfCache.busy=null;$("pdfLbl").textContent="PDF'i paylaş · hazır";return b}).catch(e=>{pdfCache.busy=null;$("pdfLbl").textContent="PDF'i paylaş";throw e})};
+  $("pdfLbl").textContent="PDF hazırlanıyor…";$("pdfBtn").disabled=true;
+  pdfCache={key,blob:null,busy:Teklif.pdf(o).then(b=>{pdfCache.blob=b;pdfCache.busy=null;$("pdfLbl").textContent="PDF'i sohbete gönder";$("pdfBtn").disabled=false;return b}).catch(e=>{pdfCache.busy=null;$("pdfLbl").textContent="PDF'i sohbete gönder";$("pdfBtn").disabled=false;throw e})};
   return pdfCache.busy;
 }
-$("pdfBtn").addEventListener("click",async()=>{
+$("sendBtn").addEventListener("click",()=>{
   if(!curMachine()){toast("Önce makine seçin.");return}
-  const o=finalize();const name=(o.no||"teklif")+".pdf";
-  if(!pdfCache.blob||pdfCache.key!==JSON.stringify({...o,createdAt:0,no:"",id:""})){
-    try{await makePdf()}catch(e){toast(navigator.onLine?"PDF oluşturulamadı.":"PDF aracı internetsiz ilk kez yüklenemiyor.");return}
-    // iOS paylaşım menüsü için ikinci dokunuş gerekebilir
-    if(navigator.share){toast("PDF hazır. Paylaşmak için tekrar dokunun.");return}
-  }
-  const file=new File([pdfCache.blob],name,{type:"application/pdf"});
+  const num=waNumber(od.phone);
+  if(num.length<8){$("o_phone").focus();$("o_phone").scrollIntoView({block:"center",behavior:"smooth"});toast("Müşterinin WhatsApp numarasını ülke koduyla girin.");return}
+  const o=finalize();
+  makePdf(o).catch(()=>toast(navigator.onLine?"PDF oluşturulamadı.":"PDF aracı internetsiz ilk kez yüklenemiyor."));
+  const url="https://wa.me/"+num+"?text="+encodeURIComponent(Teklif.message(o));
+  const w=window.open(url,"_blank");if(!w)location.href=url;
+  $("sendBtn").classList.add("sent");$("sendLbl").textContent="Sohbeti tekrar aç";
+  $("step2").hidden=false;
+});
+async function sharePdf(o){
+  const name=(o.no||"teklif")+".pdf";
+  let blob=pdfCache.key===offerKey(o)?pdfCache.blob:null;
+  if(!blob){try{blob=await makePdf(o)}catch(e){toast(navigator.onLine?"PDF oluşturulamadı.":"PDF aracı internetsiz ilk kez yüklenemiyor.");return}
+    if(navigator.share){toast("PDF hazır, göndermek için tekrar dokunun.");return}}
+  const file=new File([blob],name,{type:"application/pdf"});
   if(navigator.canShare&&navigator.canShare({files:[file]})){
-    try{await navigator.share({files:[file],title:name})}catch(e){if(e&&e.name!=="AbortError")toast("Paylaşılamadı.")}
-  }else{download(name,pdfCache.blob,"application/pdf");toast("PDF indirildi")}
+    try{await navigator.share({files:[file]});toast("Gönderildi")}catch(e){if(e&&e.name!=="AbortError")toast("Paylaşılamadı.")}
+  }else{download(name,blob,"application/pdf");toast("PDF indirildi (bu cihaz doğrudan paylaşımı desteklemiyor)")}
+}
+$("pdfBtn").addEventListener("click",()=>{if(finalOffer)sharePdf(finalOffer)});
+$("pvDl").addEventListener("click",async()=>{
+  if(!curMachine()){toast("Önce makine seçin.");return}
+  const o=Object.assign(buildOffer(),{no:"TASLAK"});
+  $("pvDl").textContent="Hazırlanıyor…";
+  try{const b=await Teklif.pdf(o);download("teklif-taslak.pdf",b,"application/pdf")}catch(e){toast("PDF oluşturulamadı.")}
+  $("pvDl").textContent="PDF indir";
+});
+// eski teklifler: kayıtlı tekliften PDF'i yeniden üret ve paylaş
+$("offerList").addEventListener("click",async e=>{
+  const a=e.target.closest("[data-oi]");if(!a||!editing)return;
+  const o=(editing.offers||[])[+a.dataset.oi];if(!o||!o.machine){toast("Bu eski kayıtta teklif detayı yok.");return}
+  const sm=a.querySelector("em");const old=sm.textContent;sm.textContent="PDF hazırlanıyor…";
+  try{
+    if(!a._blob)a._blob=await Teklif.pdf(o);
+    const file=new File([a._blob],(o.no||"teklif")+".pdf",{type:"application/pdf"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){sm.textContent="Paylaşmak için dokunun";if(a._ready){await navigator.share({files:[file]}).catch(()=>{});sm.textContent=old}a._ready=true}
+    else{download(file.name,a._blob,"application/pdf");sm.textContent=old}
+  }catch(err){sm.textContent=old;toast("PDF oluşturulamadı.")}
 });
 
-/* ---------- katalog düzenleyici ---------- */
-let catDraft=null;
+/* ---------- ayarlar: standart metinler + katalog ---------- */
+let catDraft=null, stdLang="tr";
 function lines(a){return (a||[]).join("\n")}
+function renderStd(){
+  const st=catDraft.std;
+  ["name","address","phone","email","web"].forEach(k=>$("sc_"+k).value=st.company[k]||"");
+  $("sc_valid").value=st.validityDays||"";
+  [...$("stdLang").children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===stdLang));
+  STD_KEYS.forEach(k=>$("ss_"+k).value=st[stdLang][k]||"");
+}
+function readStd(){
+  const st=catDraft.std;
+  ["name","address","phone","email","web"].forEach(k=>st.company[k]=$("sc_"+k).value.trim());
+  st.validityDays=$("sc_valid").value.trim();
+  STD_KEYS.forEach(k=>st[stdLang][k]=$("ss_"+k).value.trim());
+}
+$("stdLang").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;readStd();stdLang=b.dataset.v;renderStd()});
+$("catTabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;[...$("catTabs").children].forEach(x=>x.setAttribute("aria-pressed",x===b));$("stdPane").hidden=b.dataset.v!=="std";$("catPane").hidden=b.dataset.v!=="cat"});
 function renderCat(){
   $("catList").innerHTML=catDraft.machines.map((m,mi)=>`<div class="cm" data-mi="${mi}">
     <div class="row"><div class="f"><label>Makine adı</label><input data-k="name" value="${esc(m.name)}"></div><div class="f"><label>Fiyat (${esc(catDraft.currency)})</label><input data-k="price" inputmode="decimal" value="${esc(m.price)}" placeholder="boş = fiyatsız"></div></div>
@@ -908,7 +1028,7 @@ function readCat(){
   });
   const c=$("catCur");if(c)catDraft.currency=c.value;
 }
-$("catBtn").addEventListener("click",()=>{catDraft=normCat(catalog);renderCat();$("catSheet").classList.add("open");$("scrim").classList.add("open")});
+$("catBtn").addEventListener("click",()=>{catDraft=normCat(catalog);stdLang="tr";renderStd();renderCat();$("catSheet").classList.add("open");$("scrim").classList.add("open");$("catSheet").querySelector(".sheet-body").scrollTop=0});
 $("catClose").addEventListener("click",()=>{$("catSheet").classList.remove("open");if(!$("sheet").classList.contains("open"))$("scrim").classList.remove("open")});
 $("catList").addEventListener("click",e=>{
   const cm=e.target.closest(".cm");if(!cm)return;readCat();const m=catDraft.machines[+cm.dataset.mi];
@@ -917,13 +1037,14 @@ $("catList").addEventListener("click",e=>{
   else if(e.target.dataset.delm){if(e.target.dataset.armed){catDraft.machines.splice(+cm.dataset.mi,1);renderCat()}else{e.target.dataset.armed="1";e.target.textContent="Emin misiniz? Çıkar";e.target.classList.add("arm")}}
 });
 $("catAdd").addEventListener("click",()=>{readCat();catDraft.machines.push({id:"m"+Date.now().toString(36),name:"",price:"",specs:{tr:[],en:[]},options:[]});renderCat();const all=document.querySelectorAll("#catList .cm");all[all.length-1].scrollIntoView({behavior:"smooth"});all[all.length-1].querySelector("input").focus()});
-$("catSave").addEventListener("click",async()=>{
-  readCat();catDraft.machines=catDraft.machines.filter(m=>m.name);catDraft.machines.forEach(m=>m.options=m.options.filter(o=>o.tr||o.en));
+$("catSave").addEventListener("click",()=>{
+  readStd();readCat();catDraft.machines=catDraft.machines.filter(m=>m.name);catDraft.machines.forEach(m=>m.options=m.options.filter(o=>o.tr||o.en));
   catalog=normCat(catDraft);
-  if(mode==="db"){fb.F.setDoc(fb.F.doc(fb.db,"fuar_katalog","main"),catalog).catch(e=>toast(e&&e.code==="permission-denied"?"Katalog kaydedilemedi: Firebase izni yok.":"Katalog sunucuya gönderilemedi."))}
+  if(mode==="db"){fb.F.setDoc(fb.F.doc(fb.db,"fuar_katalog","main"),catalog).catch(e=>toast(e&&e.code==="permission-denied"?"Ayarlar kaydedilemedi: Firebase izni yok.":"Ayarlar sunucuya gönderilemedi."))}
   else lsSet(LS+"_cat",catalog);
   $("catSheet").classList.remove("open");if(!$("sheet").classList.contains("open"))$("scrim").classList.remove("open");
-  toast("Katalog kaydedildi");if(od)renderOffer();
+  toast("Ayarlar kaydedildi");
+  if(od&&$("offerSheet").classList.contains("open")){toast("Ayarlar kaydedildi; açık teklifte metinleri yenilemek için dili değiştirip geri alın.")}
 });
 
 boot();

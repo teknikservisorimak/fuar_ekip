@@ -9,7 +9,6 @@ Bu klasördeki dosyaların hepsini aynı GitHub deposunun köküne yükleyin
 - `manifest.webmanifest` — iPhone/Android'e uygulama olarak kurulum
 - `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` — uygulama ikonları
 - `teklif-sablon.js` — teklif / PDF şablonu
-- `teklif.html` — müşterinin WhatsApp linkinden açtığı teklif sayfası
 
 
 ## 2. Firebase (hazır)
@@ -39,15 +38,24 @@ alır; kurulu uygulamada görünmezse uygulamayı kapatıp tekrar açın.
 
 ## Teklif gönderme
 1. Müşteri kaydını açın → **Teklif hazırla**.
-2. Dili, makineyi ve seçenekleri seçin; isterseniz fiyat, indirim, teslim ve ödeme
-   koşullarını girin. Altta PDF önizlemesi anında güncellenir.
-3. **1 · WhatsApp'ta gönder** → telefonda WhatsApp, müşterinin sohbetiyle ve hazır
-   mesajla açılır; mesajda teklif linki vardır, müşteri linkten PDF'i indirir.
-4. **2 · PDF'i paylaş** → PDF dosyasının kendisini paylaşım menüsünden WhatsApp'a
-   gönderin (müşteri sohbeti en üstte görünür).
+2. Dili, makineyi ve seçenekleri seçin; fiyat ve indirimi girin. Ticari koşullar
+   ve metinler standart ayarlardan dolu gelir, bu teklife özel değiştirebilirsiniz.
+   Altta PDF önizlemesi anında güncellenir.
+3. **Teklifi WhatsApp'tan gönder** → müşterinin WhatsApp sohbeti kısa bir mesajla
+   açılır, PDF arka planda hazırlanır.
+4. Uygulamaya dönün → **PDF'i sohbete gönder** → WhatsApp'ı ve müşterinin
+   sohbetini seçin. Müşteriye sadece PDF gider, siteye yönlendirme yoktur.
 
-Gönderilen teklif müşteri kaydına işlenir, durum "Teklif verildi" olur ve 3 gün
-sonrasına takip tarihi konur.
+Gönderilen teklif müşteri kaydına işlenir (durum "Teklif verildi", 3 gün sonrasına
+takip). Kayıttaki eski tekliflere dokunarak PDF'i yeniden gönderebilirsiniz.
 
-Makine, özellik, seçenek ve fiyatları üstteki **Katalog** düğmesinden düzenleyin;
-tüm ekip aynı kataloğu kullanır.
+## Teklif ayarları
+Üstteki **Teklif** düğmesi:
+- **Standart metinler:** firma bilgileri, teslim süresi/şekli, ödeme, garanti,
+  giriş/kapanış metni ve genel şartlar (Türkçe ve İngilizce ayrı).
+- **Makine kataloğu:** makineler, teknik özellikler ("Başlık: değer" şeklinde),
+  seçenekler ve fiyatlar.
+Ayarlar tüm ekip için ortaktır.
+
+Not: Eski sürümden kalan `teklif.html` dosyası artık kullanılmıyor; repodan
+silebilirsiniz (kalması da sorun değildir).

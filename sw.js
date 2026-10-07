@@ -2,7 +2,7 @@
    Kendi dosyalarımız her açılışta önce internetten denenir (güncellemeler hemen gelir),
    internet yoksa önbellekteki son sürüm açılır. Firebase, Tesseract, PDF aracı ve
    yazı tipleri ilk yüklemeden sonra önbellekten gelir. */
-const CACHE = "fuar-crm-v2";
+const CACHE = "fuar-crm-v3";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "teklif-sablon.js"];
 const RUNTIME_HOSTS = ["cdnjs.cloudflare.com", "www.gstatic.com", "cdn.jsdelivr.net", "fonts.googleapis.com", "fonts.gstatic.com", "tessdata.projectnaptha.com"];
 
