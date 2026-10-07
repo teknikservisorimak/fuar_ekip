@@ -1,36 +1,23 @@
 # ORİMAK Fuar CRM — GitHub Pages kurulumu
 
 ## 1. Dosyaları yükleyin
-Bu klasördeki 6 dosyanın hepsini aynı GitHub deposunun köküne yükleyin
+Bu klasördeki dosyaların hepsini aynı GitHub deposunun köküne yükleyin
 (Add file → Upload files):
 
 - `index.html` — uygulamanın kendisi
 - `sw.js` — internetsiz çalışma
 - `manifest.webmanifest` — iPhone/Android'e uygulama olarak kurulum
 - `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` — uygulama ikonları
+- `teklif-sablon.js` — teklif / PDF şablonu
+- `teklif.html` — müşterinin WhatsApp linkinden açtığı teklif sayfası
 
-Firebase ayarı girilmeden de açılır; o durumda kayıtlar sadece o cihazda tutulur.
 
-## 2. Ekiple ortak liste için Firebase
-Mevcut Firebase projenizi (Servis Takip'in projesi) kullanabilirsiniz; veriler
-ayrı bir `fuar_crm` koleksiyonunda durur, diğer verilere dokunmaz.
-
-1. Firebase Console → **Proje ayarları → Genel → Uygulamalarınız** →
-   Web uygulamasının **Config** bloğunu kopyalayın.
-2. `index.html` içinde `const FIREBASE_CONFIG = {` satırını bulun
-   (GitHub'da dosyayı açıp kalem ikonuyla düzenleyin) ve süslü parantezin
-   içine yapıştırın.
-3. Firebase Console → **Authentication → Sign-in method → Anonymous** →
-   **Etkinleştir**.
-4. Firebase Console → **Firestore → Kurallar**. Mevcut kurallarınızı
-   SİLMEDEN, `match /databases/{database}/documents {` bloğunun içine
-   şunu ekleyin ve Yayınla'ya basın:
-
-```
-match /fuar_crm/{id} {
-  allow read, write: if request.auth != null;
-}
-```
+## 2. Firebase (hazır)
+Uygulama `orimak-fuar-crm` Firebase projesine bağlı (Firestore, Avrupa / eur3).
+Anonymous giriş açık; kurallar yalnızca `fuar_crm` koleksiyonuna, uygulamadan
+giriş yapmış kullanıcıların yazmasına izin veriyor. Ayrıca bir şey yapmanız
+gerekmiyor. Kayıtları Firebase Console → Firestore → Data → `fuar_crm`
+altında görebilirsiniz.
 
 ## 3. Telefona / tablete uygulama olarak kurun
 - **iPhone / iPad:** Safari'de siteyi açın → Paylaş → **Ana Ekrana Ekle**.
@@ -49,3 +36,18 @@ Arapça/Kiril kartlarda isim alanını elle kontrol edin.
 ## Güncelleme
 `index.html`'i yeniden yükleyin. Uygulama açılışta yeni sürümü internetten
 alır; kurulu uygulamada görünmezse uygulamayı kapatıp tekrar açın.
+
+## Teklif gönderme
+1. Müşteri kaydını açın → **Teklif hazırla**.
+2. Dili, makineyi ve seçenekleri seçin; isterseniz fiyat, indirim, teslim ve ödeme
+   koşullarını girin. Altta PDF önizlemesi anında güncellenir.
+3. **1 · WhatsApp'ta gönder** → telefonda WhatsApp, müşterinin sohbetiyle ve hazır
+   mesajla açılır; mesajda teklif linki vardır, müşteri linkten PDF'i indirir.
+4. **2 · PDF'i paylaş** → PDF dosyasının kendisini paylaşım menüsünden WhatsApp'a
+   gönderin (müşteri sohbeti en üstte görünür).
+
+Gönderilen teklif müşteri kaydına işlenir, durum "Teklif verildi" olur ve 3 gün
+sonrasına takip tarihi konur.
+
+Makine, özellik, seçenek ve fiyatları üstteki **Katalog** düğmesinden düzenleyin;
+tüm ekip aynı kataloğu kullanır.
